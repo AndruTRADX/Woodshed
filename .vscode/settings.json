@@ -1,0 +1,16 @@
+{
+  "launch": {
+    "configurations": [
+      {
+        "name": "Woodshed Debug",
+        "type": "dotnet",
+        "request": "launch",
+        "projectPath": "${workspaceFolder}/api/Woodshed.API/Woodshed.API.csproj"
+      },
+    ],
+    "compounds": []
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.preferences.importModuleSpecifier": "non-relative"
+}
