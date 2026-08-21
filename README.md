@@ -8,3 +8,7 @@ I hope you folks enjoy it as much as I'm enjoying making it <3.
 
 This is the original sketch for the project:
 ![woodshed](resources/images/Woodshed.png)
+
+And this is the DB relational model:
+
+![woodshed_rm](resources/images/WoodshedRelationalModel.png)
