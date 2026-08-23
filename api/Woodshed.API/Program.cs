@@ -71,10 +71,9 @@ using (var scoped = app.Services.CreateScope())
     try
     {
         var context = service.GetRequiredService<AppDbContext>();
-        var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
         await context.Database.MigrateAsync();
 
-        // await AppDbContextSeed.SeedAsync(context, loggerFactory, userManager, activityScheduler);
+        await AppDbContextSeed.SeedAsync(context, loggerFactory);
     }
     catch (Exception ex)
     {
