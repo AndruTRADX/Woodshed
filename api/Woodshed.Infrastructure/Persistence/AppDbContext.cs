@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 {
     public DbSet<Instrument> Instruments { get; set; }
     public DbSet<InstrumentProficiency> InstrumentProficiencies { get; set; }
+    public DbSet<Photo> Photos { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<PostComment> PostComments { get; set; }
     public DbSet<PostLike> PostLikes { get; set; }
@@ -47,6 +48,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         builder.Entity<Instrument>()
             .HasIndex(i => i.Name)
             .IsUnique();
+
+        builder.Entity<Photo>()
+            .HasOne(au => au.User)
+            .WithMany(a => a.Photos)
+            .HasForeignKey(au => au.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Post>()
             .HasOne(au => au.User)

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Contracts.Photos;
 using Woodshed.Infrastructure.Models;
@@ -30,6 +31,10 @@ public static class InfrastructureServiceRegistration
         // Photos
         services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
         services.AddScoped<IPhotoService, PhotoService>();
+
+        // Identity
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserProfileService, UserProfileService>();
 
         return services;
     }
