@@ -18,7 +18,7 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
         var user = new ApplicationUser()
         {
             Email = request.Email,
-            Nickname = request.Nickname,
+            UserName = request.UserName,
             Name = request.Name,
             LastName = request.LastName,
             Biography = request.Biography,

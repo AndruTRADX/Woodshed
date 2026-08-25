@@ -24,6 +24,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
+    opt.SignIn.RequireConfirmedAccount = false;
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();

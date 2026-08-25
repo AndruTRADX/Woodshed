@@ -7,10 +7,6 @@ namespace Woodshed.Domain.Identity;
 
 public class ApplicationUser : IdentityUser
 {
-    [Column("nickname")]
-    [MaxLength(64)]
-    public string Nickname { get; set; } = string.Empty;
-
     [Column("name")]
     [MaxLength(155)]
     public string? Name { get; set; } = string.Empty;

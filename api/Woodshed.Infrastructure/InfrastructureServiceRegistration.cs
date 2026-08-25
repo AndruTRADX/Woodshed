@@ -7,6 +7,7 @@ using Woodshed.Application.Contracts.Photos;
 using Woodshed.Infrastructure.Models;
 using Woodshed.Infrastructure.Persistence;
 using Woodshed.Infrastructure.Repositories;
+using Woodshed.Infrastructure.Security;
 using Woodshed.Infrastructure.Services;
 
 namespace Woodshed.Infrastructure;
@@ -35,6 +36,7 @@ public static class InfrastructureServiceRegistration
         // Identity
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserProfileService, UserProfileService>();
+        services.AddScoped<IUserAccessor, UserAccessor>();
 
         return services;
     }
