@@ -22,7 +22,7 @@ public class UserAccessor(UserManager<ApplicationUser> userManager, IHttpContext
         return new UserResponse
         {
             Id = user.Id,
-            UserName = user.UserName ?? "",
+            NickName = user.NickName ?? "",
             Email = user.Email,
             Name = user.Name,
             LastName = user.LastName,

@@ -1,4 +1,4 @@
-using Woodshed.Application.Models.Request;
+using Woodshed.Application.Models.Request.Identity;
 using Woodshed.Application.Models.Response.Identity;
 
 namespace Woodshed.Application.Contracts.Identity;

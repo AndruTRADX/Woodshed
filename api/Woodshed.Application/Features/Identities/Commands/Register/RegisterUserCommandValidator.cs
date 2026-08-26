@@ -22,12 +22,12 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .MaximumLength(512)
             .WithMessage("Password must not exceed 512 characters");
 
-        RuleFor(x => x.Account.UserName)
+        RuleFor(x => x.Account.NickName)
             .NotNull().NotEmpty()
             .MinimumLength(3)
-            .WithMessage("UserName is required and must have at least 3 characters")
+            .WithMessage("NickName is required and must have at least 3 characters")
             .MaximumLength(64)
-            .WithMessage("UserName must not exceed 64 characters");
+            .WithMessage("NickName must not exceed 64 characters");
 
         RuleFor(x => x.Account.Name)
             .MaximumLength(155)

@@ -23,9 +23,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<ApplicationUser>()
-            .Property(u => u.Id)
-            .HasMaxLength(36);
+        builder.Entity<ApplicationUser>(x =>
+        {
+            x.Property(u => u.Id).HasMaxLength(36);
+            x.HasIndex(u => u.NickName).IsUnique();
+        });
 
         #region Identity
         builder.Entity<IdentityUserClaim<string>>()

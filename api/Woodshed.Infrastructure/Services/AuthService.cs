@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Exceptions;
-using Woodshed.Application.Models.Request;
+using Woodshed.Application.Models.Request.Identity;
 using Woodshed.Application.Models.Response.Identity;
 using Woodshed.Domain.Identity;
 
@@ -15,10 +16,16 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
 
         if (existingEmail is not null) throw new BadRequestException($"User with email \"{request.Email}\" already exists");
 
+        var existingNickName = await userManager.Users
+            .FirstOrDefaultAsync(u => u.NickName == request.NickName);
+
+        if (existingNickName is not null) throw new BadRequestException($"Nickname \"{request.NickName}\" is already taken");
+
         var user = new ApplicationUser()
         {
             Email = request.Email,
-            UserName = request.UserName,
+            UserName = request.Email,
+            NickName = request.NickName,
             Name = request.Name,
             LastName = request.LastName,
             Biography = request.Biography,
