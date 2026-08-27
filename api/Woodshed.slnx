@@ -2,6 +2,7 @@
   <Folder Name="/docker/">
     <File Path="docker/docker-compose.yml" />
   </Folder>
+  <Folder Name="/src/" />
   <Folder Name="/src/API/">
     <Project Path="Woodshed.API/Woodshed.API.csproj" />
   </Folder>
@@ -10,6 +11,7 @@
     <Project Path="Woodshed.Domain/Woodshed.Domain.csproj" />
   </Folder>
   <Folder Name="/src/Infrastructure/">
+    <Project Path="Woodshed.GraphQL/Woodshed.GraphQL.csproj" />
     <Project Path="Woodshed.Infrastructure/Woodshed.Infrastructure.csproj" />
   </Folder>
 </Solution>

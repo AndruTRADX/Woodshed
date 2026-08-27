@@ -21,7 +21,7 @@ public class ApplicationUser : IdentityUser
     public string? LastName { get; set; } = string.Empty;
 
     [Column("biography")]
-    [MaxLength(512)]
+    [MaxLength(1024)]
     public string? Biography { get; set; } = string.Empty;
 
     [Column("image_url")]

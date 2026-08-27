@@ -14,7 +14,7 @@ public class PostComment : BaseDomainModel
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [Column("content")]
-    [MaxLength(512)]
+    [MaxLength(1024)]
     public required string Content { get; set; }
 
     [Column("created_at")]
