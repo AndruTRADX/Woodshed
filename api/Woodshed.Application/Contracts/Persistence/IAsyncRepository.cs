@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using AutoMapper;
 using Woodshed.Application.Contracts.Specifications;
 using Woodshed.Domain.Common;
 
@@ -21,12 +22,6 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
         List<Expression<Func<T, object>>>? includes = null,
         bool enabledTracking = false
     );
-    Task<IReadOnlyList<TResult>> GetAsync<TResult>(
-        Expression<Func<T, TResult>> selector,
-        Expression<Func<T, bool>>? predicate = null, 
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        bool enabledTracking = false
-    );
 
     Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate);
     Task<T?> GetFirstAsync(
@@ -41,12 +36,11 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
         List<Expression<Func<T, object>>>? includes = null,
         bool enabledTracking = false
     );
+
     Task<TResult?> GetFirstAsync<TResult>(
-        Expression<Func<T, TResult>> selector,
-        Expression<Func<T, bool>>? predicate = null, 
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        bool enabledTracking = false
-    );
+        Expression<Func<T, bool>> predicate,
+        IConfigurationProvider configuration,
+        CancellationToken cancellationToken = default);
 
     void AddEntity(T entity);
     void UpdateEntity(T entity);

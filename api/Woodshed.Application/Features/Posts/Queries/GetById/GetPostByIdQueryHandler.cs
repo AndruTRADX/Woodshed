@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Exceptions;
@@ -7,22 +8,15 @@ using Woodshed.Domain;
 
 namespace Woodshed.Application.Features.Posts.Queries.GetById;
 
-public class GetPostByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPostByIdQuery, ApiResponse<PostResponse>>
+public class GetPostByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<GetPostByIdQuery, ApiResponse<PostResponse>>
 {
     public async Task<ApiResponse<PostResponse>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
         var response = await unitOfWork.Repository<Post>()
-            .GetFirstAsync(
+            .GetFirstAsync<PostResponse>(
                 predicate: x => x.Id == request.Id,
-                selector: x => new PostResponse
-                {
-                    Id = x.Id,
-                    Content = x.Content,
-                    CreatedAt = x.CreatedAt,
-                    UserId = x.UserId,
-                    CommentsCount = x.PostComments.Count,
-                    LikesCount = x.PostLikes.Count
-                }
+                configuration: mapper.ConfigurationProvider,
+                cancellationToken: cancellationToken
             ) ?? throw new NotFoundException(nameof(Post), request.Id);
 
         return new ApiResponse<PostResponse>(response);

@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Contracts.Specifications;
@@ -149,35 +151,11 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), specification);
     }
 
-    public async Task<IReadOnlyList<TResult>> GetAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enabledTracking = false)
+    public async Task<TResult?> GetFirstAsync<TResult>(Expression<Func<T, bool>> predicate, IConfigurationProvider configuration, CancellationToken cancellationToken = default)
     {
-        IQueryable<T> query = _dbContext.Set<T>();
-
-        if (!enabledTracking)
-            query = query.AsNoTracking();
-
-        if (predicate is not null)
-            query = query.Where(predicate);
-
-        if (orderBy is not null)
-            query = orderBy(query);
-
-        return await query.Select(selector).ToListAsync();
-    }
-
-    public async Task<TResult?> GetFirstAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enabledTracking = false)
-    {
-        IQueryable<T> query = _dbContext.Set<T>();
-
-        if (!enabledTracking)
-            query = query.AsNoTracking();
-
-        if (predicate is not null)
-            query = query.Where(predicate);
-
-        if (orderBy is not null)
-            query = orderBy(query);
-
-        return query.Select(selector).FirstOrDefault();
+        return await _dbContext.Set<T>()
+            .Where(predicate)
+            .ProjectTo<TResult>(configuration)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }
