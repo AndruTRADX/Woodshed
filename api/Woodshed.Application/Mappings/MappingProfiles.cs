@@ -1,6 +1,7 @@
 using AutoMapper;
 using Woodshed.Application.Models.Request.Posts;
 using Woodshed.Application.Models.Response.Identity;
+using Woodshed.Application.Models.Response.Posts;
 using Woodshed.Domain;
 using Woodshed.Domain.Identity;
 
@@ -14,5 +15,9 @@ public class MappingProfiles: Profile
 
         CreateMap<ApplicationUser, UserResponse>();
         CreateMap<ApplicationUser, UserAccountResponse>();
+
+        CreateMap<Post, PostResponse>()
+            .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => src.PostComments.Count))
+            .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.PostLikes.Count));
     }
 }

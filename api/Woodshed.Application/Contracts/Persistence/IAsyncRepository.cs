@@ -7,6 +7,7 @@ namespace Woodshed.Application.Contracts.Persistence;
 public interface IAsyncRepository<T> where T : BaseDomainModel
 {
     Task<IReadOnlyList<T>> GetAllAsync();
+
     Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate);
     Task<IReadOnlyList<T>> GetAsync(
         Expression<Func<T, bool>>? predicate = null, 
@@ -18,6 +19,12 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
         Expression<Func<T, bool>>? predicate = null, 
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         List<Expression<Func<T, object>>>? includes = null,
+        bool enabledTracking = false
+    );
+    Task<IReadOnlyList<TResult>> GetAsync<TResult>(
+        Expression<Func<T, TResult>> selector,
+        Expression<Func<T, bool>>? predicate = null, 
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         bool enabledTracking = false
     );
 
@@ -32,6 +39,12 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
         Expression<Func<T, bool>>? predicate = null, 
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         List<Expression<Func<T, object>>>? includes = null,
+        bool enabledTracking = false
+    );
+    Task<TResult?> GetFirstAsync<TResult>(
+        Expression<Func<T, TResult>> selector,
+        Expression<Func<T, bool>>? predicate = null, 
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         bool enabledTracking = false
     );
 

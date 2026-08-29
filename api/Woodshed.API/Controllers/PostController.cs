@@ -3,14 +3,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Woodshed.Application.Features.Posts.Commands.Create;
 using Woodshed.Application.Features.Posts.Commands.Delete;
+using Woodshed.Application.Features.Posts.Queries.GetById;
 using Woodshed.Application.Models.Request.Posts;
 using Woodshed.Application.Models.Response.Common;
+using Woodshed.Application.Models.Response.Posts;
 
 namespace Woodshed.API.Controllers;
 
 [Authorize]
 public class PostController : BaseApiController
 {
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ApiResponse<PostResponse>>> GetById(string id)
+    {
+        return await Mediator.Send(new GetPostByIdQuery() { Id = id });
+    }
+
     [HttpPost]
     public async Task<ActionResult<ApiResponse<string>>> Create(CreatePostRequest request)
     {

@@ -11,7 +11,6 @@
     <Project Path="Woodshed.Domain/Woodshed.Domain.csproj" />
   </Folder>
   <Folder Name="/src/Infrastructure/">
-    <Project Path="Woodshed.GraphQL/Woodshed.GraphQL.csproj" />
     <Project Path="Woodshed.Infrastructure/Woodshed.Infrastructure.csproj" />
   </Folder>
 </Solution>

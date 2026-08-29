@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="11.0.0" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MediatR" Version="14.2.0" />
@@ -20,6 +21,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Woodshed.Domain\Woodshed.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Posts\Queries\GetById\" />
   </ItemGroup>
 
 </Project>

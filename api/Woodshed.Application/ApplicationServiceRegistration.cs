@@ -1,4 +1,5 @@
 using System.Reflection;
+using AutoMapper.Extensions.ExpressionMapping;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,11 @@ public static class ApplicationServiceRegistration
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddAutoMapper(x => x.AddProfile(new MappingProfiles()));
+        services.AddAutoMapper(x =>
+        {
+            x.AddExpressionMapping();
+            x.AddProfile(new MappingProfiles());
+        });
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddMediatR(cfg =>
         {
