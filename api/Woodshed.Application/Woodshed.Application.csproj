@@ -23,8 +23,4 @@
     <ProjectReference Include="..\Woodshed.Domain\Woodshed.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Posts\Queries\GetById\" />
-  </ItemGroup>
-
 </Project>
