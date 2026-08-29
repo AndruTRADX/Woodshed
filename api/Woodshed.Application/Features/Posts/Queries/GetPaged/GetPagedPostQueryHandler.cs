@@ -15,14 +15,14 @@ public class GetPagedPostQueryHandler(IUnitOfWork unitOfWork, IUserAccessor user
     {
         var userId = userAccessor.GetUserIdOrDefault();
         var spec = new PostSpecification(request, userId);
-        var response = await unitOfWork.Repository<Post>().GetAllWithSpec(spec);
+
+        var data = await unitOfWork.Repository<Post>()
+            .GetAllWithSpec<PostResponse>(spec, mapper.ConfigurationProvider, cancellationToken);
 
         var specCount = new PostCountSpecification(request, userId);
         var totalCount = await unitOfWork.Repository<Post>().CountAsync(specCount);
 
         var totalPages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(totalCount) / Convert.ToDecimal(request.PageSize)));
-
-        var data = mapper.Map<IReadOnlyList<Post>, IReadOnlyList<PostResponse>>(response);
 
         return new ApiResponse<PagedResponse<PostResponse>>(new()
         {

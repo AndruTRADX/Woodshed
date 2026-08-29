@@ -48,5 +48,6 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
 
     Task<T?> GetByIdWithSpec(ISpecification<T> specification);
     Task<IReadOnlyList<T>> GetAllWithSpec(ISpecification<T> specification);
+    Task<IReadOnlyList<TResult>> GetAllWithSpec<TResult>(ISpecification<T> specification, IConfigurationProvider configuration, CancellationToken cancellationToken = default);
     Task<int> CountAsync(ISpecification<T> specification);
 }

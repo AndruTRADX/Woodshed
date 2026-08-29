@@ -141,6 +141,13 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return await ApplySpecification(specification).ToListAsync();
     }
 
+    public async Task<IReadOnlyList<TResult>> GetAllWithSpec<TResult>(ISpecification<T> specification, IConfigurationProvider configuration, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(specification)
+            .ProjectTo<TResult>(configuration)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<int> CountAsync(ISpecification<T> specification)
     {
         return await ApplySpecification(specification).CountAsync();
