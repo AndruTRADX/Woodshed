@@ -65,7 +65,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
         builder.Entity<PostComment>()
             .HasOne(pc => pc.Post)
-            .WithMany(pc => pc.PostComments)
+            .WithMany(pc => pc.Comments)
             .HasForeignKey(pc => pc.PostId)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -115,7 +115,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .OnDelete(DeleteBehavior.Restrict);
 
             x.HasOne(f => f.Post)
-                .WithMany(f => f.PostLikes)
+                .WithMany(f => f.Likes)
                 .HasForeignKey(o => o.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
         });

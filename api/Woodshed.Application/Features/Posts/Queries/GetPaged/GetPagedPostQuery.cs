@@ -1,4 +1,3 @@
-using System;
 using MediatR;
 using Woodshed.Application.Models.Response.Common;
 using Woodshed.Application.Models.Response.Posts;

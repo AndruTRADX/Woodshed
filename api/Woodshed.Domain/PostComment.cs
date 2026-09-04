@@ -30,4 +30,10 @@ public class PostComment : BaseDomainModel
 
     public ApplicationUser User { get; set; } = null!;
     public Post Post { get; set; } = null!;
+
+    public void EnsureOwnedBy(string userId)
+    {
+        if (UserId != userId)
+            throw new DomainException("You cannot delete others posts comments");
+    }
 }

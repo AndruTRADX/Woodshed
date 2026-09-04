@@ -26,6 +26,20 @@ public class Post : BaseDomainModel
 
     public ApplicationUser User { get; set; } = null!;
 
-    public List<PostLike> PostLikes { get; set; } = [];
-    public List<PostComment> PostComments { get; set; } = [];
+    public List<PostLike> Likes { get; set; } = [];
+    public List<PostComment> Comments { get; set; } = [];
+
+    public void Delete(string userId)
+    {
+        if (userId != UserId)
+            throw new DomainException("You cannot delete others posts");
+    }
+
+    public void AddComment(PostComment comment, string userId)
+    {
+        comment.PostId = Id;
+        comment.UserId = userId;
+
+        Comments.Add(comment);
+    }
 }
