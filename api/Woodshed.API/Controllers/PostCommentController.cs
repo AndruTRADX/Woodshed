@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Woodshed.Application.Features.PostComments.Commands.Create;
 using Woodshed.Application.Features.PostComments.Commands.Delete;
+using Woodshed.Application.Features.PostComments.Commands.Update;
 using Woodshed.Application.Features.PostComments.Queries.GetPaged;
 using Woodshed.Application.Models.Request.PostComments;
 using Woodshed.Application.Models.Response.Common;
@@ -25,6 +26,12 @@ public class PostCommentController : BaseApiController
     public async Task<ActionResult<ApiResponse<PagedResponse<PostCommentResponse>>>> GetPaged([FromQuery] GetPagedPostCommentQuery query)
     {
         return await Mediator.Send(query);
+    }
+
+    [HttpPut("{commentId}")]
+    public async Task<ActionResult<ApiResponse<string>>> Update(string postId, string commentId, [FromBody] UpdatePostCommentRequest request)
+    {
+        return await Mediator.Send(new UpdatePostCommentCommand { PostId = postId, CommentId = commentId, Request = request });
     }
 
     [HttpDelete("{commentId}")]

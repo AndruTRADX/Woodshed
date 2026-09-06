@@ -5,8 +5,9 @@ namespace Woodshed.Application.Models.Response.PostComments;
 public class PostCommentResponse
 {
     public required string Id { get; set; }
+    public required string PostId { get; set; }
     public required string Content { get; set; }
+    public bool HasBeenEdited { get; set; }
     public required DateTime CreatedAt { get; set; }
-    public required string UserId { get; set; }
     public required UserAccountResponse User { get; set; }
 }

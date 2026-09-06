@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Woodshed.Application.Features.PostComments.Commands.Delete;
+namespace Woodshed.Application.Features.PostComments.Commands.Update;
 
-public class DeletePostCommentCommandValidator : AbstractValidator<DeletePostCommentCommand>
+public class UpdatePostCommentCommandValidator : AbstractValidator<UpdatePostCommentCommand>
 {
-    public DeletePostCommentCommandValidator()
+    public UpdatePostCommentCommandValidator()
     {
         RuleFor(x => x.PostId)
             .NotNull().NotEmpty()
@@ -17,5 +17,11 @@ public class DeletePostCommentCommandValidator : AbstractValidator<DeletePostCom
             .WithMessage("CommentId is required")
             .Length(36)
             .WithMessage("CommentId must be 36 characters");
+
+        RuleFor(x => x.Request.Content)
+            .NotNull().NotEmpty()
+            .WithMessage("Content is required")
+            .MaximumLength(1024)
+            .WithMessage("Content must not exceed 1024 characters");
     }
 }

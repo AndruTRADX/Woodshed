@@ -20,7 +20,7 @@ public class DeletePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccess
         )
             ?? throw new NotFoundException(nameof(PostComment), request.CommentId);
 
-        comment.EnsureOwnedBy(userId);
+        comment.PrepareDelete(userId);
 
         unitOfWork.Repository<PostComment>().DeleteEntity(comment);
         await unitOfWork.SaveChangesAsync(cancellationToken);

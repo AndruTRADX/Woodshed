@@ -1,13 +1,12 @@
 using Woodshed.Domain;
 
-namespace Woodshed.Application.Specifications.PostComments;
+namespace Woodshed.Application.Specifications.PostLikes;
 
-public class PostCommentSpecification : BaseSpecification<PostComment>
+public class PostLikeSpecification : BaseSpecification<PostLike>
 {
-    public PostCommentSpecification(PostCommentSpecificationParams specParams, string postId) : base(
+    public PostLikeSpecification(PostLikeSpecificationParams specParams, string postId) : base(
         x =>
-            x.PostId.Equals(postId) &&
-            (string.IsNullOrWhiteSpace(specParams.UserId) || x.UserId.Equals(specParams.UserId))
+            x.PostId.Equals(postId)
     )
     {
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);

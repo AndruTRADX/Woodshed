@@ -17,6 +17,9 @@ public class PostComment : BaseDomainModel
     [MaxLength(1024)]
     public required string Content { get; set; }
 
+    [Column("has_been_edited")]
+    public bool HasBeenEdited { get; set; }
+
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
@@ -31,7 +34,20 @@ public class PostComment : BaseDomainModel
     public ApplicationUser User { get; set; } = null!;
     public Post Post { get; set; } = null!;
 
-    public void EnsureOwnedBy(string userId)
+    public void PrepareUpdate(string userId)
+    {
+        if (UserId != userId)
+            throw new DomainException("You cannot update others posts comments");
+
+        HasBeenEdited = true;
+    }
+
+    public void PrepareDelete(string userId)
+    {
+        EnsureOwnership(userId);
+    }
+
+    private void EnsureOwnership(string userId)
     {
         if (UserId != userId)
             throw new DomainException("You cannot delete others posts comments");
