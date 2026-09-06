@@ -25,6 +25,6 @@ public class CreatePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccess
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new ApiResponse<string>();
+        return new ApiResponse<string>(data.Id);
     }
 }
