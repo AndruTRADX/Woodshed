@@ -17,8 +17,14 @@ public class Post : BaseDomainModel
     [MaxLength(3072)]
     public required string Content { get; set; }
 
+    [Column("has_been_edited")]
+    public bool HasBeenEdited { get; set; }
+
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [Column("edited_at")]
+    public DateTime? EditedAt { get; set; }
 
     [Column("user_id")]
     [MaxLength(36)]
@@ -29,9 +35,18 @@ public class Post : BaseDomainModel
     public List<PostLike> Likes { get; set; } = [];
     public List<PostComment> Comments { get; set; } = [];
 
-    public void Delete(string userId)
+    public void PrepareUpdate(string userId)
     {
-        if (userId != UserId)
+        if (UserId != userId)
+            throw new DomainException("You cannot update others posts");
+
+        HasBeenEdited = true;
+        EditedAt = DateTime.UtcNow;
+    }
+
+    public void PrepareDelete(string userId)
+    {
+        if (UserId != userId)
             throw new DomainException("You cannot delete others posts");
     }
 

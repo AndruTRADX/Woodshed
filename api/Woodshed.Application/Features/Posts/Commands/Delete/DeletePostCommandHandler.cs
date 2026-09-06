@@ -16,7 +16,7 @@ public class DeletePostCommandHandler(IUnitOfWork unitOfWork, IUserAccessor user
         var data = await unitOfWork.Repository<Post>().GetFirstAsync(x => x.Id == request.Id)
             ?? throw new NotFoundException(nameof(Post), request.Id);
 
-        data.Delete(userId);
+        data.PrepareDelete(userId);
 
         unitOfWork.Repository<Post>().DeleteEntity(data);
         await unitOfWork.SaveChangesAsync(cancellationToken);

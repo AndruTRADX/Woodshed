@@ -18,6 +18,7 @@ public class MappingProfiles : Profile
         CreateMap<ApplicationUser, UserAccountResponse>();
 
         CreateMap<CreatePostRequest, Post>();
+        CreateMap<UpdatePostRequest, Post>();
         CreateMap<Post, PostResponse>()
             .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => src.Comments.Count))
             .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.Likes.Count));

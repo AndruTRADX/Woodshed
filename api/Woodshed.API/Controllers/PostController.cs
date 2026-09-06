@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Woodshed.Application.Features.Posts.Commands.Create;
 using Woodshed.Application.Features.Posts.Commands.Delete;
+using Woodshed.Application.Features.Posts.Commands.Update;
 using Woodshed.Application.Features.Posts.Queries.GetById;
 using Woodshed.Application.Features.Posts.Queries.GetPaged;
 using Woodshed.Application.Models.Request.Posts;
@@ -30,6 +31,12 @@ public class PostController : BaseApiController
     public async Task<ActionResult<ApiResponse<PostResponse>>> GetById(string id)
     {
         return await Mediator.Send(new GetPostByIdQuery() { Id = id });
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ApiResponse<string>>> Update(string id, [FromBody] UpdatePostRequest request)
+    {
+        return await Mediator.Send(new UpdatePostCommand() { Id = id, Request = request });
     }
 
     [HttpDelete("{id}")]

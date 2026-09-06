@@ -23,6 +23,9 @@ public class PostComment : BaseDomainModel
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    [Column("edited_at")]
+    public DateTime? EditedAt { get; set; }
+
     [Column("user_id")]
     [MaxLength(36)]
     public string UserId { get; set; } = string.Empty;
@@ -40,14 +43,10 @@ public class PostComment : BaseDomainModel
             throw new DomainException("You cannot update others posts comments");
 
         HasBeenEdited = true;
+        EditedAt = DateTime.UtcNow;
     }
 
     public void PrepareDelete(string userId)
-    {
-        EnsureOwnership(userId);
-    }
-
-    private void EnsureOwnership(string userId)
     {
         if (UserId != userId)
             throw new DomainException("You cannot delete others posts comments");
