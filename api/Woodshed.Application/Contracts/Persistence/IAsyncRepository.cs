@@ -11,32 +11,41 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
 
     Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate);
     Task<IReadOnlyList<T>> GetAsync(
-        Expression<Func<T, bool>>? predicate = null, 
+        Expression<Func<T, bool>>? predicate = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        List<string>? includeStrings = null,
-        bool enabledTracking = false
+        bool enableTracking = false
     );
     Task<IReadOnlyList<T>> GetAsync(
-        Expression<Func<T, bool>>? predicate = null, 
+        List<string> includeStrings,
+        Expression<Func<T, bool>>? predicate = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        List<Expression<Func<T, object>>>? includes = null,
-        bool enabledTracking = false
+        bool enableTracking = false
+    );
+    Task<IReadOnlyList<T>> GetAsync(
+        List<Expression<Func<T, object>>> includes,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false
     );
 
     Task<T?> GetFirstAsync(Expression<Func<T, bool>> predicate);
     Task<T?> GetFirstAsync(
-        Expression<Func<T, bool>>? predicate = null, 
+        Expression<Func<T, bool>>? predicate = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        List<string>? includeStrings = null,
-        bool enabledTracking = false
+        bool enableTracking = false
     );
     Task<T?> GetFirstAsync(
-        Expression<Func<T, bool>>? predicate = null, 
+        List<string> includeStrings,
+        Expression<Func<T, bool>>? predicate = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        List<Expression<Func<T, object>>>? includes = null,
-        bool enabledTracking = false
+        bool enableTracking = false
     );
-
+    Task<T?> GetFirstAsync(
+        List<Expression<Func<T, object>>> includes,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false
+    );
     Task<TResult?> GetFirstAsync<TResult>(
         Expression<Func<T, bool>> predicate,
         IConfigurationProvider configuration,

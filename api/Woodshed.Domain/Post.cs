@@ -42,4 +42,15 @@ public class Post : BaseDomainModel
 
         Comments.Add(comment);
     }
+
+    public void AddLike(string userId)
+    {
+        var like = new PostLike
+        {
+            PostId = Id,
+            UserId = userId
+        };
+
+        Likes.Add(like);
+    }
 }

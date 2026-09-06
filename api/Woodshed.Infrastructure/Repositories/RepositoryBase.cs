@@ -24,15 +24,15 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return await _dbContext.Set<T>().Where(predicate).ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<string>? includeStrings = null, bool enableTracking = false)
+    public async Task<IReadOnlyList<T>> GetAsync(
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false)
     {
         IQueryable<T> query = _dbContext.Set<T>();
 
         if (!enableTracking)
             query = query.AsNoTracking();
-
-        if (includeStrings is not null)
-            query = includeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         if (predicate is not null)
             query = query.Where(predicate);
@@ -43,15 +43,40 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return await query.ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<Expression<Func<T, object>>>? includes = null, bool enableTracking = false)
+    public async Task<IReadOnlyList<T>> GetAsync(
+        List<string> includeStrings,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false)
     {
         IQueryable<T> query = _dbContext.Set<T>();
 
         if (!enableTracking)
             query = query.AsNoTracking();
 
-        if (includes is not null)
-            query = includes.Aggregate(query, (current, include) => current.Include(include));
+        query = includeStrings.Aggregate(query, (current, include) => current.Include(include));
+
+        if (predicate is not null)
+            query = query.Where(predicate);
+
+        if (orderBy is not null)
+            return await orderBy(query).ToListAsync();
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<T>> GetAsync(
+        List<Expression<Func<T, object>>> includes,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false)
+    {
+        IQueryable<T> query = _dbContext.Set<T>();
+
+        if (!enableTracking)
+            query = query.AsNoTracking();
+
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
 
         if (predicate is not null)
             query = query.Where(predicate);
@@ -68,15 +93,15 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return response.FirstOrDefault();
     }
 
-    public async Task<T?> GetFirstAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<string>? includeStrings = null, bool enableTracking = false)
+    public async Task<T?> GetFirstAsync(
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false)
     {
         IQueryable<T> query = _dbContext.Set<T>();
 
         if (!enableTracking)
             query = query.AsNoTracking();
-
-        if (includeStrings is not null)
-            query = includeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         if (predicate is not null)
             query = query.Where(predicate);
@@ -92,15 +117,18 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return responseQuery.FirstOrDefault();
     }
 
-    public async Task<T?> GetFirstAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<Expression<Func<T, object>>>? includes = null, bool enableTracking = false)
+    public async Task<T?> GetFirstAsync(
+        List<string> includeStrings,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false)
     {
         IQueryable<T> query = _dbContext.Set<T>();
 
         if (!enableTracking)
             query = query.AsNoTracking();
 
-        if (includes is not null)
-            query = includes.Aggregate(query, (current, include) => current.Include(include));
+        query = includeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         if (predicate is not null)
             query = query.Where(predicate);
@@ -114,6 +142,44 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         var responseQuery = await query.ToListAsync();
 
         return responseQuery.FirstOrDefault();
+    }
+
+    public async Task<T?> GetFirstAsync(
+        List<Expression<Func<T, object>>> includes,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = false)
+    {
+        IQueryable<T> query = _dbContext.Set<T>();
+
+        if (!enableTracking)
+            query = query.AsNoTracking();
+
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+        if (predicate is not null)
+            query = query.Where(predicate);
+
+        if (orderBy is not null)
+        {
+            var response = await orderBy(query).ToListAsync();
+            return response.FirstOrDefault();
+        }
+
+        var responseQuery = await query.ToListAsync();
+
+        return responseQuery.FirstOrDefault();
+    }
+
+    public async Task<TResult?> GetFirstAsync<TResult>(
+        Expression<Func<T, bool>> predicate,
+        IConfigurationProvider configuration,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Set<T>()
+            .Where(predicate)
+            .ProjectTo<TResult>(configuration)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public void AddEntity(T entity)
@@ -156,13 +222,5 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
     private IQueryable<T> ApplySpecification(ISpecification<T> specification)
     {
         return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), specification);
-    }
-
-    public async Task<TResult?> GetFirstAsync<TResult>(Expression<Func<T, bool>> predicate, IConfigurationProvider configuration, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Set<T>()
-            .Where(predicate)
-            .ProjectTo<TResult>(configuration)
-            .FirstOrDefaultAsync(cancellationToken);
     }
 }

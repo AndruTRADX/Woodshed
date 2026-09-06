@@ -16,7 +16,8 @@ public class DeletePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccess
 
         var comment = await unitOfWork.Repository<PostComment>().GetFirstAsync(
             predicate: x => x.Id == request.CommentId && x.PostId == request.PostId,
-            includeStrings: [], enabledTracking: true)
+            enableTracking: true
+        )
             ?? throw new NotFoundException(nameof(PostComment), request.CommentId);
 
         comment.EnsureOwnedBy(userId);

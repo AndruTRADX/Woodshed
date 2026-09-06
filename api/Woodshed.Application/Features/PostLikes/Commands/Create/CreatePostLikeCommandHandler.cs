@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Contracts.Persistence;
@@ -6,11 +5,11 @@ using Woodshed.Application.Exceptions;
 using Woodshed.Application.Models.Response.Common;
 using Woodshed.Domain;
 
-namespace Woodshed.Application.Features.PostComments.Commands.Create;
+namespace Woodshed.Application.Features.PostLikes.Commands.Create;
 
-public class CreatePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccessor userAccessor, IMapper mapper) : IRequestHandler<CreatePostCommentCommand, ApiResponse<string>>
+public class CreatePostLikeCommandHandler(IUnitOfWork unitOfWork, IUserAccessor userAccessor) : IRequestHandler<CreatePostLikeCommand, ApiResponse<string>>
 {
-    public async Task<ApiResponse<string>> Handle(CreatePostCommentCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<string>> Handle(CreatePostLikeCommand request, CancellationToken cancellationToken)
     {
         var response = await unitOfWork.Repository<Post>().GetFirstAsync(predicate: x => x.Id == request.PostId, enableTracking: true)
             ?? throw new NotFoundException(nameof(Post), request.PostId);
@@ -18,12 +17,10 @@ public class CreatePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccess
         var userId = userAccessor.GetUserIdOrDefault()
             ?? throw new UnauthorizedException();
 
-        var data = mapper.Map<PostComment>(request.Request);
-
-        response.AddComment(data, userId);
+        response.AddLike(userId);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new ApiResponse<string>(data.Id);
+        return new ApiResponse<string>(response.Id);
     }
 }

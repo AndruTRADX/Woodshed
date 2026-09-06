@@ -20,7 +20,9 @@ public static class ApiServiceRegistration
         services.AddExceptionHandler<UnauthorizedExceptionHandler>();
         services.AddExceptionHandler<ForbiddenExceptionHandler>();
         services.AddExceptionHandler<UnprocessableContentHandler>();
+        services.AddExceptionHandler<DbUpdateExceptionHandler>();
         services.AddExceptionHandler<ValidationExceptionHandler>();
+
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         services.AddSingleton<IAuthorizationMiddlewareResultHandler, UnauthorizedMiddleware>();
