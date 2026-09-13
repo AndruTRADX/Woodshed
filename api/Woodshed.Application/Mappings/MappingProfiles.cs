@@ -1,6 +1,7 @@
 using AutoMapper;
 using Woodshed.Application.Models.Request.PostComments;
 using Woodshed.Application.Models.Request.Posts;
+using Woodshed.Application.Models.Response.Follow;
 using Woodshed.Application.Models.Response.Identity;
 using Woodshed.Application.Models.Response.Photos;
 using Woodshed.Application.Models.Response.PostComments;
@@ -15,10 +16,17 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
+        string? currentUserId = null;
+
         CreateMap<ApplicationUser, UserResponse>();
+
+        CreateMap<UserFollower, FolloweeResponse>();
+        CreateMap<UserFollower, FollowerResponse>();
         CreateMap<ApplicationUser, UserAccountResponse>()
             .ForMember(dest => dest.FollowersCount, opt => opt.MapFrom(src => src.Followers.Count))
-            .ForMember(dest => dest.FollowingsCount, opt => opt.MapFrom(src => src.Following.Count));
+            .ForMember(dest => dest.FollowingsCount, opt => opt.MapFrom(src => src.Following.Count))
+            .ForMember(dest => dest.IsFollower, opt => opt.MapFrom(src => src.Following.Any(f => f.FolloweeId == currentUserId)))
+            .ForMember(dest => dest.IsFollowee, opt => opt.MapFrom(src => src.Followers.Any(f => f.FollowerId == currentUserId)));
 
         CreateMap<CreatePostRequest, Post>();
         CreateMap<UpdatePostRequest, Post>();

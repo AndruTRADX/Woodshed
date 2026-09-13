@@ -16,6 +16,9 @@ public class UserFollower : BaseDomainModel
     [MaxLength(36)]
     public string FolloweeId { get; set; } = string.Empty;
 
+    [Column("followed_at")]
+    public DateTime FollowedAt { get; set; } = DateTime.UtcNow;
+
     public ApplicationUser Follower { get; set; } = null!; // Observer
     public ApplicationUser Followee { get; set; } = null!; // Target
 }

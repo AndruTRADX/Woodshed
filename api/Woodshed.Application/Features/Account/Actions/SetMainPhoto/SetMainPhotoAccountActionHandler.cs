@@ -4,7 +4,7 @@ using Woodshed.Application.Models.Response.Common;
 
 namespace Woodshed.Application.Features.Account.Actions.SetMainPhoto;
 
-public class RemovePhotoAccountActionHandler(IUserAccessor userAccessor, IUserAccountService accountService) : IRequestHandler<SetMainPhotoAccountAction, ApiResponse<Unit>>
+public class SetMainPhotoAccountActionHandler(IUserAccessor userAccessor, IUserAccountService accountService) : IRequestHandler<SetMainPhotoAccountAction, ApiResponse<Unit>>
 {
     public async Task<ApiResponse<Unit>> Handle(SetMainPhotoAccountAction request, CancellationToken cancellationToken)
     {

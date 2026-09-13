@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Woodshed.Application.Features.Account.Actions.SetMainPhoto;
 
-public class RemovePhotoAccountActionValidator : AbstractValidator<SetMainPhotoAccountAction>
+public class SetMainPhotoAccountActionValidator : AbstractValidator<SetMainPhotoAccountAction>
 {
-    public RemovePhotoAccountActionValidator()
+    public SetMainPhotoAccountActionValidator()
     {
         RuleFor(x => x.PhotoId)
             .NotNull()
