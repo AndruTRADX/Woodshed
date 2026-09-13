@@ -8,7 +8,9 @@ public class FollowersSpecification : BaseSpecification<UserFollower>
         x => x.FolloweeId == specParams.UserId
     )
     {
-        AddInclude(x => x.Follower);
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
+
+        AddInclude(x => x.Followee);
+        AddOrderByDescending(x => x.FollowedAt);
     }
 }

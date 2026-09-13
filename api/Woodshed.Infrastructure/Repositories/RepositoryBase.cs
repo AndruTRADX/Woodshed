@@ -207,10 +207,10 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
         return await ApplySpecification(specification).ToListAsync();
     }
 
-    public async Task<IReadOnlyList<TResult>> GetAllWithSpec<TResult>(ISpecification<T> specification, IConfigurationProvider configuration, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TResult>> GetAllWithSpec<TResult>(ISpecification<T> specification, IConfigurationProvider configuration, CancellationToken cancellationToken = default, object? parameters = null)
     {
         return await ApplySpecification(specification)
-            .ProjectTo<TResult>(configuration)
+            .ProjectTo<TResult>(configuration, parameters)
             .ToListAsync(cancellationToken);
     }
 

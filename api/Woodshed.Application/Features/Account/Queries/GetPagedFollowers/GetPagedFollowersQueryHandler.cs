@@ -18,7 +18,7 @@ public class GetPagedFollowersQueryHandler(IMapper mapper, IUnitOfWork unitOfWor
         var spec = new FollowersSpecification(request);
 
         var data = await unitOfWork.Repository<UserFollower>()
-            .GetAllWithSpec<FollowerResponse>(spec, mapper.ConfigurationProvider, cancellationToken);
+            .GetAllWithSpec<FollowerResponse>(spec, mapper.ConfigurationProvider, cancellationToken, new { currentUserId });
 
         var specCount = new FollowersCountSpecification(request);
         var totalCount = await unitOfWork.Repository<UserFollower>().CountAsync(specCount);

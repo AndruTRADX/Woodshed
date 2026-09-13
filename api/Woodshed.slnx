@@ -13,4 +13,7 @@
   <Folder Name="/src/Infrastructure/">
     <Project Path="Woodshed.Infrastructure/Woodshed.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tasks/">
+    <File Path="tasks/tasks.md" />
+  </Folder>
 </Solution>
