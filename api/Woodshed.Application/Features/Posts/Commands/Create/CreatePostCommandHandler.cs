@@ -12,7 +12,7 @@ public class CreatePostCommandHandler(IUserAccessor userAccessor, IUnitOfWork un
 {
     public async Task<ApiResponse<string>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.GetUserIdOrDefault() ?? throw new UnauthorizedException();
+        var userId = userAccessor.GetUserId();
 
         var data = mapper.Map<Post>(request.Request);
         data.UserId = userId;

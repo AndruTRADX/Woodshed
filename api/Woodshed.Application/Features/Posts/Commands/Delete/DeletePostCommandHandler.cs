@@ -11,7 +11,7 @@ public class DeletePostCommandHandler(IUnitOfWork unitOfWork, IUserAccessor user
 {
     public async Task<ApiResponse<Unit>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.GetUserIdOrDefault() ?? throw new UnauthorizedException();
+        var userId = userAccessor.GetUserId();
 
         var data = await unitOfWork.Repository<Post>().GetFirstAsync(x => x.Id == request.Id)
             ?? throw new NotFoundException(nameof(Post), request.Id);

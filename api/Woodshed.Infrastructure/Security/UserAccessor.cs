@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Woodshed.Application.Contracts.Identity;
+using Woodshed.Application.Exceptions;
 using Woodshed.Application.Models.Response.Identity;
 using Woodshed.Domain.Identity;
 
@@ -32,8 +33,9 @@ public class UserAccessor(UserManager<ApplicationUser> userManager, IHttpContext
         };
     }
 
-    public string? GetUserIdOrDefault()
+    public string GetUserId()
     {
-        return httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedException();
     }
 }

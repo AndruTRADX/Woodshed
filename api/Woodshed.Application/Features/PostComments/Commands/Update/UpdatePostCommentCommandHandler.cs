@@ -12,8 +12,7 @@ public class UpdatePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccess
 {
     public async Task<ApiResponse<string>> Handle(UpdatePostCommentCommand request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.GetUserIdOrDefault()
-            ?? throw new UnauthorizedException();
+        var userId = userAccessor.GetUserId();
 
         var response = await unitOfWork.Repository<PostComment>().GetFirstAsync(predicate: x => x.Id == request.CommentId && x.PostId == request.PostId)
             ?? throw new NotFoundException(nameof(PostComment), request.CommentId);

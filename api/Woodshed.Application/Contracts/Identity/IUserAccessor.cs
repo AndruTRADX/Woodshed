@@ -5,5 +5,5 @@ namespace Woodshed.Application.Contracts.Identity;
 public interface IUserAccessor
 {
     Task<UserResponse?> GetCurrentUserAsync();
-    public string? GetUserIdOrDefault();
+    public string GetUserId();
 }

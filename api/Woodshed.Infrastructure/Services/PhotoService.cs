@@ -2,6 +2,8 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 using Woodshed.Application.Contracts.Photos;
 using Woodshed.Application.Models.Photos;
 using Woodshed.Infrastructure.Models;
@@ -16,7 +18,7 @@ public class PhotoService : IPhotoService
     public PhotoService(IOptions<CloudinarySettings> config)
     {
         _cloudinarySettings = config.Value;
-        
+
         var account = new Account(
             _cloudinarySettings.CloudName,
             _cloudinarySettings.ApiKey,
@@ -41,30 +43,37 @@ public class PhotoService : IPhotoService
 
     public async Task<PhotoUploadResults?> UploadPhoto(IFormFile file)
     {
-        if (file.Length > 0)
+        if (file.Length == 0)
         {
-            await using var stream = file.OpenReadStream();
-
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(file.FileName, stream),
-                Folder = "Reactivities",
-            };
-
-            var uploadResults = await _cloudinary.UploadAsync(uploadParams);
-
-            if (uploadResults.Error != null)
-            {
-                throw new ApplicationException(uploadResults.Error.Message);
-            }
-
-            return new PhotoUploadResults
-            {
-                PublicId = uploadResults.PublicId,
-                Url = uploadResults.SecureUrl.AbsoluteUri
-            };
+            return null;
         }
 
-        return null;
+        await using var originalStream = file.OpenReadStream();
+
+        using var image = await Image.LoadAsync(originalStream);
+
+        using var reEncodedStream = new MemoryStream();
+        await image.SaveAsync(reEncodedStream, new PngEncoder { SkipMetadata = true });
+        reEncodedStream.Position = 0;
+
+        var uploadParams = new ImageUploadParams
+        {
+            File = new FileDescription($"{Guid.NewGuid()}.png", reEncodedStream),
+            Folder = "Woodshed",
+            Format = "png"
+        };
+
+        var uploadResults = await _cloudinary.UploadAsync(uploadParams);
+
+        if (uploadResults.Error != null)
+        {
+            throw new ApplicationException(uploadResults.Error.Message);
+        }
+
+        return new PhotoUploadResults
+        {
+            PublicId = uploadResults.PublicId,
+            Url = uploadResults.SecureUrl.AbsoluteUri
+        };
     }
 }

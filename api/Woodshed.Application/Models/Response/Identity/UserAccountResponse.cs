@@ -7,4 +7,8 @@ public class UserAccountResponse
     public string Biography { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public bool IsFollower { get; set; }
+    public bool IsFollowee { get; set; }
+    public int FollowersCount { get; set; }
+    public int FollowingsCount { get; set; }
 }

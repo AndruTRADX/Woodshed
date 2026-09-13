@@ -11,8 +11,7 @@ public class DeletePostLikeCommandHandler(IUnitOfWork unitOfWork, IUserAccessor 
 {
     public async Task<ApiResponse<Unit>> Handle(DeletePostLikeCommand request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.GetUserIdOrDefault()
-            ?? throw new UnauthorizedException();
+        var userId = userAccessor.GetUserId();
 
         var like = await unitOfWork.Repository<PostLike>().GetFirstAsync(
             predicate: x => x.UserId == userId && x.PostId == request.PostId,

@@ -39,6 +39,14 @@ public class ApplicationUser : IdentityUser
     public List<PostLike> PostLikes { get; set; } = [];
     public List<PostComment> PostComments { get; set; } = [];
 
+    public void EditAccount(string nickName, string? name, string? lastName, string? biography)
+    {
+        NickName = nickName;
+        Name = name;
+        LastName = lastName;
+        Biography = biography;
+    }
+
     public Photo AddPhoto(string url, string publicId)
     {
         var photo = new Photo

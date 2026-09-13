@@ -14,8 +14,7 @@ public class CreatePostLikeCommandHandler(IUnitOfWork unitOfWork, IUserAccessor 
         var response = await unitOfWork.Repository<Post>().GetFirstAsync(predicate: x => x.Id == request.PostId, enableTracking: true)
             ?? throw new NotFoundException(nameof(Post), request.PostId);
 
-        var userId = userAccessor.GetUserIdOrDefault()
-            ?? throw new UnauthorizedException();
+        var userId = userAccessor.GetUserId();
 
         response.AddLike(userId);
 

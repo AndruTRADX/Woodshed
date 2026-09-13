@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Woodshed.API.ExceptionHandlers;
 using Woodshed.API.Filters;
 using Woodshed.API.Middleware;
@@ -26,6 +27,11 @@ public static class ApiServiceRegistration
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         services.AddSingleton<IAuthorizationMiddlewareResultHandler, UnauthorizedMiddleware>();
+
+        services.Configure<FormOptions>(opt =>
+        {
+            opt.MultipartBodyLengthLimit = 10 * 1024 * 1024;
+        });
 
         return services;
     }

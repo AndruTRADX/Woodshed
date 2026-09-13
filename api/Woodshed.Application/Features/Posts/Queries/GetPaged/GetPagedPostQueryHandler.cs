@@ -13,7 +13,7 @@ public class GetPagedPostQueryHandler(IUnitOfWork unitOfWork, IUserAccessor user
 {
     public async Task<ApiResponse<PagedResponse<PostResponse>>> Handle(GetPagedPostQuery request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.GetUserIdOrDefault();
+        var userId = userAccessor.GetUserId();
         var spec = new PostSpecification(request, userId);
 
         var data = await unitOfWork.Repository<Post>()

@@ -35,7 +35,7 @@ public static class InfrastructureServiceRegistration
 
         // Identity
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IUserProfileService, UserProfileService>();
+        services.AddScoped<IUserAccountService, UserAccountService>();
         services.AddScoped<IUserAccessor, UserAccessor>();
 
         return services;

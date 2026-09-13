@@ -15,8 +15,7 @@ public class CreatePostCommentCommandHandler(IUnitOfWork unitOfWork, IUserAccess
         var response = await unitOfWork.Repository<Post>().GetFirstAsync(predicate: x => x.Id == request.PostId, enableTracking: true)
             ?? throw new NotFoundException(nameof(Post), request.PostId);
 
-        var userId = userAccessor.GetUserIdOrDefault()
-            ?? throw new UnauthorizedException();
+        var userId = userAccessor.GetUserId();
 
         var data = mapper.Map<PostComment>(request.Request);
 
