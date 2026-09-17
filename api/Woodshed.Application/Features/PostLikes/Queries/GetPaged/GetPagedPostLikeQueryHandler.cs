@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Models.Response.Common;
 using Woodshed.Application.Models.Response.PostLikes;
@@ -8,14 +9,16 @@ using Woodshed.Domain;
 
 namespace Woodshed.Application.Features.PostLikes.Queries.GetPaged;
 
-public class GetPagedPostLikeQueryHandler(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<GetPagedPostLikeQuery, ApiResponse<PagedResponse<PostLikeResponse>>>
+public class GetPagedPostLikeQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor) : IRequestHandler<GetPagedPostLikeQuery, ApiResponse<PagedResponse<PostLikeResponse>>>
 {
     public async Task<ApiResponse<PagedResponse<PostLikeResponse>>> Handle(GetPagedPostLikeQuery request, CancellationToken cancellationToken)
     {
+        var currentUserId = userAccessor.GetUserId();
+
         var spec = new PostLikeSpecification(request, request.PostId);
 
         var data = await unitOfWork.Repository<PostLike>()
-            .GetAllWithSpec<PostLikeResponse>(spec, mapper.ConfigurationProvider, cancellationToken);
+            .GetAllWithSpec<PostLikeResponse>(spec, mapper.ConfigurationProvider, cancellationToken, new { currentUserId });
 
         var specCount = new PostLikeCountSpecification(request, request.PostId);
         var totalCount = await unitOfWork.Repository<PostLike>().CountAsync(specCount);
