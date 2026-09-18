@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse, type AxiosError } from "axios";
 import type { ApiResponse } from "@/shared/schemas/response/ApiResponse";
 import { router } from "@/app/routes/route";
+import { toast } from "@/shared/components/ui/toast";
 
 declare module "axios" {
   export interface AxiosRequestConfig {
@@ -78,14 +79,15 @@ agent.interceptors.response.use(
             errorLines.push(`${field}:`);
             messages.forEach((msg) => errorLines.push(`  • ${msg}`));
           }
-          // toast.error(`${title}: ${message}`, {
-          //   style: { whiteSpace: "pre-line" },
-          //   description: errorLines.join("\n"),
-          //   icon: null,
-          // })
+          toast.add({
+            title: `${title}: ${message}`,
+            description: errorLines.join("\n"),
+          });
         } else {
-          // toast.error(`${title}: ${message}`)
-          console.error(`${title}: ${message}`);
+          toast.add({
+            title: title,
+            description: message,
+          });
         }
         return Promise.reject(error);
 
@@ -98,7 +100,6 @@ agent.interceptors.response.use(
         return Promise.reject(error);
 
       default:
-        // toast.error(`${title}: ${message}`)
         return Promise.reject(error);
     }
   },

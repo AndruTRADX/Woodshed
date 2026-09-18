@@ -1,16 +1,25 @@
-type Sounds = {
-  login: "sounds/login.mp4"
-}
+import { useCallback } from "react";
 
-const mp4Sound = new Audio("sounds/login.mp4")
+import { useAudioStore } from "@/shared/stores/audioStore";
+import {
+  playSound,
+  stopAllSounds,
+  stopSound,
+  type PlaySoundOptions,
+  type SoundName,
+} from "@/shared/lib/sounds";
+
 
 export const useAudio = () => {
-  const reproduceAudio = () => {
-    
-    mp4Sound.play()
-  }
+  const volume = useAudioStore((state) => state.volume);
+  const muted = useAudioStore((state) => state.muted);
 
-  return {
-    reproduceAudio
-  }
-}
+  const play = useCallback(
+    (sound: SoundName, options?: PlaySoundOptions) => {
+      playSound(sound, volume, muted, options);
+    },
+    [volume, muted],
+  );
+
+  return { play, stop: stopSound, stopAll: stopAllSounds };
+};
