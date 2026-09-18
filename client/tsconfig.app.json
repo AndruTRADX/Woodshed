@@ -8,6 +8,9 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"],
+      "@sharedUi/*": ["./src/shared/components/ui/*"],
+      "@sharedForms/*": ["./src/shared/components/forms/*"],
+      "@account/*": ["./src/features/account/*"],
     },
 
     /* Bundler mode */

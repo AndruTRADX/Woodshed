@@ -27,7 +27,7 @@ export function PaginationControl({ pageIndex, pageCount, onPageChange }: Props)
   const goToPage = (page: number) => {
     if (page === pageIndex) return
     onPageChange(page)
-    document.querySelector("#reactivities-main-container")?.scrollTo({ top: 0 })
+    document.querySelector("#woodshed-main-container")?.scrollTo({ top: 0 })
   }
 
   return (

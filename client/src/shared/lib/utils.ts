@@ -27,6 +27,21 @@ export const requiredString = (fieldName: string, min = 1, max?: number) => {
   return schema
 }
 
+export const optionalString = (fieldName: string, max?: number) => {
+
+  let schema = z
+    .string()
+
+  if (max !== undefined) {
+    schema = schema.refine(
+      val => val.length <= max,
+      `${fieldName} must not exceed ${max} characters`
+    )
+  }
+
+  return schema.optional()
+}
+
 export function debounce<Args extends unknown[]>(
   fn: (...args: Args) => void,
   delay = 300
