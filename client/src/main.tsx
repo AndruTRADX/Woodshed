@@ -1,18 +1,23 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import "./app/layout/styles.css"
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./app/layout/styles.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { RouterProvider } from 'react-router';
-import { router } from '@/app/routes/route';
+import { RouterProvider } from "react-router";
+import { router } from "@/app/routes/route";
+import { ThemeProvider } from "@/app/layout/ThemeProvider";
+import { Toaster } from "@sharedUi/toast";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
-      <RouterProvider router={router} />
+      <ThemeProvider defaultTheme="system" storageKey="woodshed-ui-theme">
+        <Toaster />
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </QueryClientProvider>
-  </StrictMode>
-)
+  </StrictMode>,
+);

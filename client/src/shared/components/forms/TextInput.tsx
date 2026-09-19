@@ -51,7 +51,7 @@ export default function TextInput<T extends FieldValues>({
 
   return (
     <Field>
-      {label && <FieldLabel htmlFor={props.name}>{label}</FieldLabel>}
+      {label && <FieldLabel htmlFor={props.name}>{label} {props.required && <span className="text-primary">*</span>}</FieldLabel>}
       {description && <FieldDescription>{description}</FieldDescription>}
 
       {multiline ? (
