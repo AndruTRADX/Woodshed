@@ -2,26 +2,35 @@
 // width; `{ percent }` scales it to the surface's own size (percent of its shorter
 // side), so the edge stays proportionally sized instead of a fixed px reading too
 // thick on a small surface or too thin on a large one.
-export type LiquidGlassDepth = number | { percent: number }
+export type LiquidGlassDepth = number | { percent: number };
 
-export function resolveDepth(depth: LiquidGlassDepth, width: number, height: number) {
-  if (typeof depth === "number") return depth
-  return (depth.percent / 100) * Math.min(width, height)
+export function resolveDepth(
+  depth: LiquidGlassDepth,
+  width: number,
+  height: number,
+) {
+  if (typeof depth === "number") return depth;
+  return (depth.percent / 100) * Math.min(width, height);
 }
 
 interface DisplacementMapParams {
-  width: number
-  height: number
-  radius: number
-  depth: number
+  width: number;
+  height: number;
+  radius: number;
+  depth: number;
 }
 
 interface DisplacementFilterParams extends DisplacementMapParams {
-  strength: number
-  chromaticAberration: number
+  strength: number;
+  chromaticAberration: number;
 }
 
-export function buildDisplacementMap({ width, height, radius, depth }: DisplacementMapParams) {
+export function buildDisplacementMap({
+  width,
+  height,
+  radius,
+  depth,
+}: DisplacementMapParams) {
   const svg = `<svg height="${height}" width="${width}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
     <style>.mix { mix-blend-mode: screen; }</style>
     <defs>
@@ -59,9 +68,9 @@ export function buildDisplacementMap({ width, height, radius, depth }: Displacem
         ry="${radius}"
         filter="blur(${depth}px)" />
     </g>
-  </svg>`
+  </svg>`;
 
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 export function buildDisplacementFilter({
@@ -72,7 +81,12 @@ export function buildDisplacementFilter({
   strength,
   chromaticAberration,
 }: DisplacementFilterParams) {
-  const displacementMapUrl = buildDisplacementMap({ width, height, radius, depth })
+  const displacementMapUrl = buildDisplacementMap({
+    width,
+    height,
+    radius,
+    depth,
+  });
 
   const svg = `<svg height="${height}" width="${width}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -122,39 +136,42 @@ export function buildDisplacementFilter({
         <feBlend in2="displacedB" mode="screen" />
       </filter>
     </defs>
-  </svg>`
+  </svg>`;
 
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}#displace`
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}#displace`;
 }
 
-let svgFilterSupport: boolean | null = null
+let svgFilterSupport: boolean | null = null;
 
 export function detectLiquidGlassSupport() {
-  if (svgFilterSupport !== null) return svgFilterSupport
+  if (svgFilterSupport !== null) return svgFilterSupport;
 
-  const testElement = document.createElement("div")
-  testElement.style.backdropFilter = "blur(1px)"
+  const testElement = document.createElement("div");
+  testElement.style.backdropFilter = "blur(1px)";
 
   if (!testElement.style.backdropFilter) {
-    svgFilterSupport = false
-    return svgFilterSupport
+    svgFilterSupport = false;
+    return svgFilterSupport;
   }
 
-  const userAgent = navigator.userAgent.toLowerCase()
-  const isChrome = /chrome|chromium|crios|edg/.test(userAgent) && !/firefox|fxios/.test(userAgent)
-  const isFirefox = /firefox|fxios/.test(userAgent)
-  const isSafari = /safari/.test(userAgent) && !/chrome|chromium|crios|edg/.test(userAgent)
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isChrome =
+    /chrome|chromium|crios|edg/.test(userAgent) &&
+    !/firefox|fxios/.test(userAgent);
+  const isFirefox = /firefox|fxios/.test(userAgent);
+  const isSafari =
+    /safari/.test(userAgent) && !/chrome|chromium|crios|edg/.test(userAgent);
 
   if (isChrome) {
-    svgFilterSupport = true
+    svgFilterSupport = true;
   } else if (isFirefox || isSafari) {
-    svgFilterSupport = false
+    svgFilterSupport = false;
   } else {
-    testElement.style.backdropFilter = "url(#test)"
-    svgFilterSupport = testElement.style.backdropFilter.includes("url")
+    testElement.style.backdropFilter = "url(#test)";
+    svgFilterSupport = testElement.style.backdropFilter.includes("url");
   }
 
-  return svgFilterSupport
+  return svgFilterSupport;
 }
 
 // "large" is for big, low-frequency surfaces (navbar, dialogs, the profile avatar
@@ -165,11 +182,11 @@ export function detectLiquidGlassSupport() {
 export const LIQUID_GLASS_PRESETS = {
   large: {
     depth: 5,
-    blur: 1,
+    blur: 2,
     strength: 40,
-    chromaticAberration: 2,
-    brightness: 1.1,
-    saturate: 1.5,
+    chromaticAberration: 3,
+    brightness: 1.18,
+    saturate: 1.65,
   },
   compact: {
     depth: 2,
@@ -179,6 +196,6 @@ export const LIQUID_GLASS_PRESETS = {
     brightness: 1.1,
     saturate: 1.5,
   },
-} as const
+} as const;
 
-export type LiquidGlassPreset = keyof typeof LIQUID_GLASS_PRESETS
+export type LiquidGlassPreset = keyof typeof LIQUID_GLASS_PRESETS;

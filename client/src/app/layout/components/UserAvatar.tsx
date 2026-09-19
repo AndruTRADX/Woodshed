@@ -5,25 +5,35 @@ import {
 } from "@/shared/components/ui/avatar";
 import { User } from "lucide-react";
 
+type Props = {
+  imageUrl?: string | null;
+  nickname: string;
+  size?: "default" | "sm" | "lg";
+};
+
 export default function UserAvatar({
   imageUrl,
   nickname,
-}: {
-  imageUrl?: string | null;
-  nickname: string;
-}) {
-  if (!imageUrl) return <User className="text-primary min-w-5" />;
-
+  size = "default",
+}: Props) {
   return (
-    <Avatar size="sm">
-      <AvatarImage
-        src={imageUrl.replace(
-          "/upload/",
-          "/upload/w_30,h_30,c_fill,f_auto,dpr_2/",
+    <Avatar size={size}>
+      {imageUrl && (
+        <AvatarImage
+          src={imageUrl.replace(
+            "/upload/",
+            "/upload/w_30,h_30,c_fill,f_auto,dpr_2/",
+          )}
+          alt={nickname}
+        />
+      )}
+      <AvatarFallback>
+        {imageUrl ? (
+          nickname.slice(0, 2).toUpperCase()
+        ) : (
+          <User className="size-1/2 text-primary" />
         )}
-        alt={nickname}
-      />
-      <AvatarFallback>{nickname}</AvatarFallback>
+      </AvatarFallback>
     </Avatar>
   );
 }
