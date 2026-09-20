@@ -1,41 +1,58 @@
-import { ListMusic, MessageCircle, User, type LucideProps } from "lucide-react";
+import {
+  Laptop,
+  ListMusic,
+  MessageCircle,
+  Moon,
+  Sun,
+  User,
+  type LucideIcon,
+} from "lucide-react";
+import type { Theme } from "@/app/layout/ThemeProvider";
 
-type sidebarItemType = {
+type THEME_OPTION_TYPE = {
+  value: Theme;
+  label: string;
+  icon: LucideIcon;
+};
+
+export const THEME_OPTIONS: THEME_OPTION_TYPE[] = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "system", label: "System", icon: Laptop },
+];
+
+type SIDEBAR_SUB_ITEM_TYPE = {
   id: string;
   link: string;
   name: string;
-  icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-  >;
-  subitems?: sidebarSubItemType[];
+  icon: LucideIcon;
 };
 
-type sidebarSubItemType = {
+type SIDEBAR_ITEM_TYPE = {
   id: string;
   link: string;
   name: string;
-  icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-  >;
+  icon: LucideIcon;
+  subitems?: SIDEBAR_SUB_ITEM_TYPE[];
 };
 
-export const sidebarItems: sidebarItemType[] = [
+type SIDEBAR_BLOCK_TYPE = {
+  title: string;
+  items: SIDEBAR_ITEM_TYPE[];
+};
+
+export const SIDEBAR_BLOCKS: SIDEBAR_BLOCK_TYPE[] = [
   {
-    id: "MyAccount",
-    link: "/account",
-    name: "My Account",
-    icon: User,
-  },
-  {
-    id: "Posts",
-    link: "/posts",
-    name: "Posts",
-    icon: ListMusic,
-  },
-  {
-    id: "Messages",
-    link: "/messages",
-    name: "Messages",
-    icon: MessageCircle,
+    title: "Playground",
+    items: [
+      { id: "MyAccount", link: "/account", name: "My Account", icon: User },
+      { id: "Posts", link: "/posts", name: "Posts", icon: ListMusic },
+      {
+        id: "Messages",
+        link: "/messages",
+        name: "Messages",
+        icon: MessageCircle,
+      },
+    ],
   },
 ];

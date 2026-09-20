@@ -1,12 +1,25 @@
 import UserAvatar from "@/app/layout/components/UserAvatar";
+import { useTheme, type Theme } from "@/app/layout/ThemeProvider";
 import GlassItem from "@/shared/components/ui/glass-item";
-import { sidebarItems } from "@/shared/constants/components/AppSidebar";
+import {
+  SIDEBAR_BLOCKS,
+  THEME_OPTIONS,
+} from "@/shared/constants/components/AppSidebar";
 import type { UserResponse } from "@/shared/schemas/response/UserResponse";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@sharedUi/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -15,8 +28,9 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  useSidebar,
 } from "@sharedUi/sidebar";
-import { Piano } from "lucide-react";
+import { Piano, Settings } from "lucide-react";
 import { Link } from "react-router";
 
 type Props = {
@@ -24,6 +38,9 @@ type Props = {
 };
 
 export function AppSidebar({ user }: Props) {
+  const { theme, setTheme } = useTheme();
+  const { isMobile } = useSidebar();
+
   return (
     <Sidebar variant="floating">
       <SidebarHeader>
@@ -41,44 +58,76 @@ export function AppSidebar({ user }: Props) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            {sidebarItems.map((item, ii) => (
-              <SidebarMenuItem key={`sidebar-item-${ii}-${item.id}`}>
-                <SidebarMenuButton>
-                  <Link
-                    to={item.link}
-                    className="font-medium flex items-center gap-2"
-                  >
-                    <item.icon />
-                    {item.name}
-                  </Link>
-                </SidebarMenuButton>
-                {item.subitems &&
-                  item.subitems.length > 0 &&
-                  item.subitems.map((subitem, ij) => (
+        {SIDEBAR_BLOCKS.map((block) => (
+          <SidebarGroup key={block.title}>
+            <SidebarGroupLabel>{block.title}</SidebarGroupLabel>
+            <SidebarMenu>
+              {block.items.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton>
+                    <Link
+                      to={item.link}
+                      className="font-medium flex items-center gap-2"
+                    >
+                      <item.icon />
+                      {item.name}
+                    </Link>
+                  </SidebarMenuButton>
+                  {item.subitems && item.subitems.length > 0 && (
                     <SidebarMenuSub>
-                      <SidebarMenuSubItem
-                        key={`sidebar-item-${ij}-${subitem.id}`}
-                      >
-                        <SidebarMenuSubButton isActive={false}>
-                          <Link
-                            to={subitem.link}
-                            className="font-medium flex items-center gap-2"
-                          >
-                            <subitem.icon />
-                            {subitem.name}
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
+                      {item.subitems.map((subitem) => (
+                        <SidebarMenuSubItem key={subitem.id}>
+                          <SidebarMenuSubButton isActive={false}>
+                            <Link
+                              to={subitem.link}
+                              className="font-medium flex items-center gap-2"
+                            >
+                              <subitem.icon />
+                              {subitem.name}
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
                     </SidebarMenuSub>
-                  ))}
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <SidebarMenuButton>
+                    <Settings />
+                    Settings
+                  </SidebarMenuButton>
+                }
+              />
+              <DropdownMenuContent
+                align="start"
+                side={isMobile ? "bottom" : "right"}
+              >
+                <DropdownMenuRadioGroup
+                  value={theme}
+                  onValueChange={(value) => setTheme(value as Theme)}
+                >
+                  <DropdownMenuLabel>Theme</DropdownMenuLabel>
+                  {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
+                    <DropdownMenuRadioItem key={value} value={value}>
+                      <Icon className="min-w-4" />
+                      {label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <GlassItem className="items-center gap-3 rounded-full">
           <UserAvatar
             nickname={user.nickName}
