@@ -2,10 +2,14 @@ import agent from "@/shared/services/agent";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { LoginRequest } from "@account/schemas/request/LoginRequest";
 import type { RegisterRequest } from "@account/schemas/request/RegisterRequest";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { useAudio } from "@/shared/hooks/useAudio";
 
 export const useLoginAccount = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { play } = useAudio();
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (login: LoginRequest) => {
@@ -15,6 +19,9 @@ export const useLoginAccount = () => {
       await queryClient.invalidateQueries({
         queryKey: ["user"],
       });
+      navigate(location.state?.from || "/posts");
+      console.log("YES!");
+      play("login");
     },
   });
 

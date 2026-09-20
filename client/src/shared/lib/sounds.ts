@@ -1,8 +1,13 @@
 export const SOUND_SOURCES = {
+  do: "/sounds/do.mp4",
+  re: "/sounds/re.mp4",
+  mi: "/sounds/mi.mp4",
   login: "/sounds/login.mp4",
   post: "/sounds/post.mp4",
-  postComment: "/sounds/post-comment.mp4",
+  postComment: "/sounds/comment.mp4",
   error: "/sounds/error.mp4",
+  sidebar: "/sounds/sidebar.mp4",
+  sidebarClosed: "/sounds/sidebar-closed.mp4",
 } as const;
 
 export type SoundName = keyof typeof SOUND_SOURCES;

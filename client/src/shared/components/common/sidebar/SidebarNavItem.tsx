@@ -7,6 +7,7 @@ import {
   SidebarMenuSubItem,
 } from "@/shared/components/ui/sidebar";
 import type { SIDEBAR_ITEM_TYPE } from "@/shared/constants/components/AppSidebar";
+import { useAudio } from "@/shared/hooks/useAudio";
 
 const ACTIVE_STYLES =
   "aria-[current=page]:bg-foreground aria-[current=page]:text-background " +
@@ -17,10 +18,17 @@ const ACTIVE_SUB_STYLES = `${ACTIVE_STYLES} aria-[current=page]:[&>svg]:text-bac
 
 export default function SidebarNavItem({ item }: { item: SIDEBAR_ITEM_TYPE }) {
   const hasSubitems = !!item.subitems && item.subitems.length > 0;
+  const { play } = useAudio();
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild className={`font-medium ${ACTIVE_STYLES} transition-colors duration-150 ease-out`}>
+      <SidebarMenuButton
+        asChild
+        className={`font-medium ${ACTIVE_STYLES} transition-colors duration-150 ease-out`}
+        onClick={() => {
+          if (item.sound) play(item.sound);
+        }}
+      >
         <SidebarLink item={item} end={hasSubitems} />
       </SidebarMenuButton>
       {hasSubitems && (
@@ -30,6 +38,9 @@ export default function SidebarNavItem({ item }: { item: SIDEBAR_ITEM_TYPE }) {
               <SidebarMenuSubButton
                 asChild
                 className={`font-medium ${ACTIVE_SUB_STYLES}`}
+                onClick={() => {
+                  if (item.sound) play(item.sound);
+                }}
               >
                 <SidebarLink item={subitem} />
               </SidebarMenuSubButton>

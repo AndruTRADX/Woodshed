@@ -13,7 +13,7 @@ import TextInput from "@sharedForms/TextInput";
 
 import { useMemo } from "react";
 import { Piano } from "lucide-react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -22,7 +22,6 @@ import {
   LoginRequestSchema,
   type LoginRequest,
 } from "@account/schemas/request/LoginRequest";
-import { useAudio } from "@/shared/hooks/useAudio";
 
 export default function LoginForm({
   className,
@@ -30,8 +29,6 @@ export default function LoginForm({
 }: React.ComponentProps<"div">) {
   const { isPendingLoginAccount, loginAccountAsync } = useLoginAccount();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { play } = useAudio();
 
   const form = useForm({
     resolver: zodResolver(LoginRequestSchema),
@@ -43,19 +40,7 @@ export default function LoginForm({
   } = form;
 
   async function onSubmit(data: LoginRequest) {
-    await loginAccountAsync(data, {
-      onSuccess: () => {
-        // toast.add({ type: "success", title: "Welcome back!" });
-        form.reset();
-        navigate(location.state?.from || "/posts");
-        console.log("YES!");
-        play("login");
-      },
-      onError: (e) => {
-        console.log({ ...e });
-        // toast.add({ type: "error", title: e.message });
-      },
-    });
+    await loginAccountAsync(data);
   }
 
   const isSubmitting = useMemo(() => {
@@ -141,7 +126,10 @@ export default function LoginForm({
 
               <FieldDescription className="text-center">
                 Don&apos;t have an account?{" "}
-                <a className="text-primary cursor-pointer" onClick={() => navigate("/register")}>
+                <a
+                  className="text-primary cursor-pointer"
+                  onClick={() => navigate("/register")}
+                >
                   Sign up
                 </a>
               </FieldDescription>
