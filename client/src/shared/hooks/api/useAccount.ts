@@ -24,7 +24,7 @@ export const useLogoutAccount = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      return await agent.post("/identity/signout");
+      return await agent.post("/identity/sign-out");
     },
     onSuccess: async () => {
       queryClient.removeQueries({

@@ -4,7 +4,6 @@ import { Button } from "@sharedUi/button";
 import { Card, CardContent } from "@sharedUi/card";
 import { Field, FieldDescription, FieldGroup } from "@sharedUi/field";
 import { Spinner } from "@sharedUi/spinner";
-import { toast } from "@sharedUi/toast";
 import TextInput from "@sharedForms/TextInput";
 
 import { useMemo } from "react";
@@ -45,7 +44,7 @@ export default function RegisterForm({
       },
       onError: (e) => {
         console.log({ ...e });
-        toast.add({ type: "error", title: e.message });
+        // toast.add({ type: "error", title: e.message });
       },
     });
   }

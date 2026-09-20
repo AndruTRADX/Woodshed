@@ -1,48 +1,56 @@
-import { useCallback, useMemo, useRef, useState, type CSSProperties } from "react"
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   buildDisplacementFilter,
   detectLiquidGlassSupport,
   LIQUID_GLASS_PRESETS,
   resolveDepth,
   type LiquidGlassPreset,
-} from "@/shared/lib/liquidGlass"
+} from "@/shared/lib/liquidGlass";
 
 interface GlassSize {
-  width: number
-  height: number
-  radius: number
+  width: number;
+  height: number;
+  radius: number;
 }
 
 interface UseLiquidGlassOptions {
-  enabled?: boolean
-  preset?: LiquidGlassPreset
+  enabled?: boolean;
+  preset?: LiquidGlassPreset;
+  border?: boolean;
 }
 
 export function useLiquidGlass<T extends HTMLElement>({
   enabled = true,
   preset = "large",
+  border = true,
 }: UseLiquidGlassOptions = {}) {
-  const [size, setSize] = useState<GlassSize | null>(null)
-  const observerRef = useRef<ResizeObserver | null>(null)
-  const rafRef = useRef<number | null>(null)
-  const lastElRef = useRef<T | null>(null)
-  const detachTokenRef = useRef(0)
+  const [size, setSize] = useState<GlassSize | null>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const lastElRef = useRef<T | null>(null);
+  const detachTokenRef = useRef(0);
 
   const measure = useCallback((el: T) => {
-    const rect = el.getBoundingClientRect()
-    const radius = parseFloat(getComputedStyle(el).borderRadius) || 0
-    setSize(prev => {
+    const rect = el.getBoundingClientRect();
+    const radius = parseFloat(getComputedStyle(el).borderRadius) || 0;
+    setSize((prev) => {
       if (
         prev &&
         prev.width === rect.width &&
         prev.height === rect.height &&
         prev.radius === radius
       ) {
-        return prev
+        return prev;
       }
-      return { width: rect.width, height: rect.height, radius }
-    })
-  }, [])
+      return { width: rect.width, height: rect.height, radius };
+    });
+  }, []);
 
   // A callback ref, not an object ref: Radix's Presence-wrapped content (Dialog,
   // Popover, DropdownMenu, Select, Combobox, HoverCard, AlertDialog) attaches/detaches
@@ -62,52 +70,52 @@ export function useLiquidGlass<T extends HTMLElement>({
   //    produces one measurement, not several.
   const ref = useCallback(
     (el: T | null) => {
-      detachTokenRef.current++
+      detachTokenRef.current++;
 
       if (el !== null && enabled && el === lastElRef.current) {
-        return
+        return;
       }
 
       if (el === null || !enabled) {
-        const token = detachTokenRef.current
+        const token = detachTokenRef.current;
         queueMicrotask(() => {
-          if (detachTokenRef.current !== token) return
-          lastElRef.current = null
-          observerRef.current?.disconnect()
-          observerRef.current = null
+          if (detachTokenRef.current !== token) return;
+          lastElRef.current = null;
+          observerRef.current?.disconnect();
+          observerRef.current = null;
           if (rafRef.current !== null) {
-            cancelAnimationFrame(rafRef.current)
-            rafRef.current = null
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
           }
-          setSize(prev => (prev === null ? prev : null))
-        })
-        return
+          setSize((prev) => (prev === null ? prev : null));
+        });
+        return;
       }
 
-      lastElRef.current = el
-      observerRef.current?.disconnect()
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+      lastElRef.current = el;
+      observerRef.current?.disconnect();
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
 
       rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null
-        measure(el)
-      })
+        rafRef.current = null;
+        measure(el);
+      });
 
-      const observer = new ResizeObserver(() => measure(el))
-      observer.observe(el)
-      observerRef.current = observer
+      const observer = new ResizeObserver(() => measure(el));
+      observer.observe(el);
+      observerRef.current = observer;
     },
-    [enabled, measure]
-  )
+    [enabled, measure],
+  );
 
   const style = useMemo<CSSProperties>(() => {
-    if (!enabled || !size || size.width === 0 || size.height === 0) return {}
+    if (!enabled || !size || size.width === 0 || size.height === 0) return {};
 
     const { blur, strength, chromaticAberration, depth, brightness, saturate } =
-      LIQUID_GLASS_PRESETS[preset]
+      LIQUID_GLASS_PRESETS[preset];
 
     if (!detectLiquidGlassSupport()) {
-      return { backdropFilter: `blur(${blur * 2}px)` }
+      return { backdropFilter: `blur(${blur * 2}px)` };
     }
 
     const filterUrl = buildDisplacementFilter({
@@ -117,14 +125,18 @@ export function useLiquidGlass<T extends HTMLElement>({
       depth: resolveDepth(depth, size.width, size.height),
       strength,
       chromaticAberration,
-    })
+    });
 
     return {
       backdropFilter: `blur(${blur / 2}px) url('${filterUrl}') blur(${blur}px) brightness(${brightness}) saturate(${saturate})`,
-      boxShadow:
-        "inset 1px 1px 1px 0 var(--glass-highlight), inset -1px -1px 1px 0 var(--glass-highlight)",
-    }
-  }, [enabled, size, preset])
+      ...(border
+        ? {
+            boxShadow:
+              "inset 1px 1px 1px 0 var(--glass-highlight), inset -1px -1px 1px 0 var(--glass-highlight)",
+          }
+        : {}),
+    };
+  }, [enabled, size, preset, border]);
 
-  return { ref, style }
+  return { ref, style };
 }

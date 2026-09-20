@@ -57,7 +57,9 @@ public class ApplicationUser : IdentityUser
         };
 
         Photos.Add(photo);
-        ImageUrl ??= photo.Url;
+
+        if (string.IsNullOrWhiteSpace(ImageUrl))
+            ImageUrl = photo.Url;
 
         return photo;
     }

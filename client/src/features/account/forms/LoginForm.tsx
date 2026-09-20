@@ -9,7 +9,6 @@ import {
   FieldSeparator,
 } from "@sharedUi/field";
 import { Spinner } from "@sharedUi/spinner";
-import { toast } from "@sharedUi/toast";
 import TextInput from "@sharedForms/TextInput";
 
 import { useMemo } from "react";
@@ -46,7 +45,7 @@ export default function LoginForm({
   async function onSubmit(data: LoginRequest) {
     await loginAccountAsync(data, {
       onSuccess: () => {
-        toast.add({ type: "success", title: "Welcome back!" });
+        // toast.add({ type: "success", title: "Welcome back!" });
         form.reset();
         navigate(location.state?.from || "/posts");
         console.log("YES!");
@@ -54,7 +53,7 @@ export default function LoginForm({
       },
       onError: (e) => {
         console.log({ ...e });
-        toast.add({ type: "error", title: e.message });
+        // toast.add({ type: "error", title: e.message });
       },
     });
   }

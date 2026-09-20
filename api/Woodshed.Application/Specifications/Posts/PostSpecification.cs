@@ -28,5 +28,7 @@ public class PostSpecification : BaseSpecification<Post>
                     break;
             }
         }
+
+        AddOrderByDescending(p => p.CreatedAt);
     }
 }

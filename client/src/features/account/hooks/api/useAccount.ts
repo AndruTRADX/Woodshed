@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { LoginRequest } from "@account/schemas/request/LoginRequest";
 import type { RegisterRequest } from "@account/schemas/request/RegisterRequest";
 import { useNavigate } from "react-router";
-import { toast } from "@sharedUi/toast";
 
 export const useLoginAccount = () => {
   const queryClient = useQueryClient();
@@ -33,11 +32,11 @@ export const useRegisterAccount = () => {
       return await agent.post("/identity/register", register);
     },
     onSuccess: async () => {
-      toast.add({
-        type: "success",
-        title: "Registered successfully",
-        description: "You can now log in into your woodshed!",
-      });
+      // toast.add({
+      //   type: "success",
+      //   title: "Registered successfully",
+      //   description: "You can now log in into your woodshed!",
+      // });
       navigate("/login");
     },
   });

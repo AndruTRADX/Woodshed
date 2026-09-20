@@ -13,13 +13,13 @@ public class GetPagedPostQueryHandler(IUnitOfWork unitOfWork, IUserAccessor user
 {
     public async Task<ApiResponse<PagedResponse<PostResponse>>> Handle(GetPagedPostQuery request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.GetUserId();
-        var spec = new PostSpecification(request, userId);
+        var currentUserId = userAccessor.GetUserId();
+        var spec = new PostSpecification(request, currentUserId);
 
         var data = await unitOfWork.Repository<Post>()
-            .GetAllWithSpec<PostResponse>(spec, mapper.ConfigurationProvider, cancellationToken);
+            .GetAllWithSpec<PostResponse>(spec, mapper.ConfigurationProvider, cancellationToken, new { currentUserId });
 
-        var specCount = new PostCountSpecification(request, userId);
+        var specCount = new PostCountSpecification(request, currentUserId);
         var totalCount = await unitOfWork.Repository<Post>().CountAsync(specCount);
 
         var totalPages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(totalCount) / Convert.ToDecimal(request.PageSize)));
