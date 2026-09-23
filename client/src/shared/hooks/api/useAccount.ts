@@ -1,5 +1,6 @@
 import type { UserResponse } from "@/shared/schemas/response/UserResponse";
 import agent from "@/shared/services/agent";
+import { toast } from "@/shared/stores/toastStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
@@ -34,6 +35,10 @@ export const useLogoutAccount = () => {
         queryKey: ["posts"],
       });
       navigate(`/login`);
+      toast.add({
+        title: "Goodbye :(",
+        description: "Come back soon!",
+      });
     },
   });
 

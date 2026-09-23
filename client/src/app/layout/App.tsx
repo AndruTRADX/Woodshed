@@ -21,7 +21,7 @@ const GITHUB_URL = "https://github.com/AndruTRADX/Woodshed";
 export default function App() {
   const { user, errorUser, isLoadingUser } = useGetCurrentUser();
   const isMobile = useIsMobile();
-  const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLElement>({ border: false });
+  const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLElement>({ border: false,  });
 
   if (isLoadingUser) {
     return <SkeletonPage />;

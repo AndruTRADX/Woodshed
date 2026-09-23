@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router";
 import { router } from "@/app/routes/route";
 import { ThemeProvider } from "@/app/layout/ThemeProvider";
+import { Toaster } from "@/shared/components/ui/toaster";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
       <ThemeProvider defaultTheme="system" storageKey="woodshed-ui-theme">
+        <Toaster />
         <RouterProvider router={router} />
       </ThemeProvider>
     </QueryClientProvider>
