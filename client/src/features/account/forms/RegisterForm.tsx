@@ -42,10 +42,6 @@ export default function RegisterForm({
         form.reset();
         navigate(location.state?.from || "/login");
       },
-      onError: (e) => {
-        console.log({ ...e });
-        // toast.add({ type: "error", title: e.message });
-      },
     });
   }
 

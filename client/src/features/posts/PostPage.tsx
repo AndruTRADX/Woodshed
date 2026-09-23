@@ -39,7 +39,7 @@ export default function PostPage() {
             />
           </div>
         ) : (
-          posts.map((post) => <PostCard post={post} />)
+          posts.map((post) => <PostCard post={post} key={`post-card-${post.id}`} />)
         )}
 
         <PaginationControl

@@ -4,6 +4,9 @@ import type { LoginRequest } from "@account/schemas/request/LoginRequest";
 import type { RegisterRequest } from "@account/schemas/request/RegisterRequest";
 import { useLocation, useNavigate } from "react-router";
 import { useAudio } from "@/shared/hooks/useAudio";
+import { toast } from "sonner";
+import { Piano } from "lucide-react";
+import { createElement } from "react";
 
 export const useLoginAccount = () => {
   const queryClient = useQueryClient();
@@ -19,9 +22,8 @@ export const useLoginAccount = () => {
       await queryClient.invalidateQueries({
         queryKey: ["user"],
       });
-      navigate(location.state?.from || "/posts");
-      console.log("YES!");
       play("login");
+      navigate(location.state?.from || "/posts");
     },
   });
 
@@ -39,11 +41,6 @@ export const useRegisterAccount = () => {
       return await agent.post("/identity/register", register);
     },
     onSuccess: async () => {
-      // toast.add({
-      //   type: "success",
-      //   title: "Registered successfully",
-      //   description: "You can now log in into your woodshed!",
-      // });
       navigate("/login");
     },
   });
