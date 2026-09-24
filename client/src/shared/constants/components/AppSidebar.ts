@@ -1,5 +1,4 @@
 import {
-  FolderGit2,
   Heart,
   Laptop,
   ListMusic,
@@ -72,13 +71,6 @@ export const SIDEBAR_BLOCKS: SIDEBAR_BLOCK_TYPE[] = [
 ];
 
 export const SIDEBAR_FOOTER_ITEMS: SIDEBAR_ITEM_TYPE[] = [
-  {
-    id: "Repository",
-    link: "https://github.com/AndruTRADX/Woodshed",
-    name: "Repository",
-    icon: FolderGit2,
-    external: true,
-  },
   {
     id: "Support",
     link: "https://github.com/AndruTRADX/Woodshed",

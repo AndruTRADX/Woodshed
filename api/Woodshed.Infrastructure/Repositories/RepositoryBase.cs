@@ -174,11 +174,12 @@ public class RepositoryBase<T>(AppDbContext dbContext) : IAsyncRepository<T> whe
     public async Task<TResult?> GetFirstAsync<TResult>(
         Expression<Func<T, bool>> predicate,
         IConfigurationProvider configuration,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        object? parameters = null)
     {
         return await _dbContext.Set<T>()
             .Where(predicate)
-            .ProjectTo<TResult>(configuration)
+            .ProjectTo<TResult>(configuration, parameters)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

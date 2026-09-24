@@ -49,7 +49,8 @@ public interface IAsyncRepository<T> where T : BaseDomainModel
     Task<TResult?> GetFirstAsync<TResult>(
         Expression<Func<T, bool>> predicate,
         IConfigurationProvider configuration,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        object? parameters = null);
 
     void AddEntity(T entity);
     void UpdateEntity(T entity);

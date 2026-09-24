@@ -23,7 +23,6 @@ export const useLoginAccount = () => {
       play("login");
       navigate(location.state?.from || "/posts");
       toast.add({
-        type: "success",
         title: "Welcome",
         description: "Happy to have you here!",
       });

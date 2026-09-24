@@ -12,5 +12,6 @@ public class PostResponse
     public required string UserId { get; set; }
     public required int CommentsCount { get; set; }
     public required int LikesCount { get; set; }
+    public required bool IsLiked { get; set; }
     public required UserAccountResponse User { get; set; }
 }

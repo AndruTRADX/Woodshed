@@ -10,6 +10,7 @@ export const PostResponseSchema = z.object({
   userId: z.string(),
   commentsCount: z.number(),
   likesCount: z.number(),
+  isLiked: z.boolean(),
   user: UserAccountResponseSchema,
 });
 

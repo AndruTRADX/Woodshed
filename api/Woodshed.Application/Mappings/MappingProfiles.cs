@@ -32,7 +32,8 @@ public class MappingProfiles : Profile
         CreateMap<UpdatePostRequest, Post>();
         CreateMap<Post, PostResponse>()
             .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => src.Comments.Count))
-            .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.Likes.Count));
+            .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.Likes.Count))
+            .ForMember(dest => dest.IsLiked, opt => opt.MapFrom(src => src.Likes.Any(f => f.UserId == currentUserId)));
 
         CreateMap<CreatePostCommentRequest, PostComment>();
         CreateMap<UpdatePostCommentRequest, PostComment>();
