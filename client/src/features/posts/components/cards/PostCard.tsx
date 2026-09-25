@@ -1,10 +1,13 @@
 import UserAvatar from "@/app/layout/components/UserAvatar";
 import PostActions from "@/features/posts/components/common/PostKeyboard";
+import {
+  useDeleteLikePost,
+  useLikePost,
+} from "@/features/posts/hooks/api/usePostLike";
 import type { PostResponse } from "@/features/posts/schemas/response/PostResponse";
 
 interface Props {
   post: PostResponse;
-  onLike?: () => void;
   onOpenComments?: () => void;
 }
 
@@ -12,8 +15,21 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
 });
 
-export default function PostCard({ post, onLike, onOpenComments }: Props) {
+export default function PostCard({ post, onOpenComments }: Props) {
   const { user } = post;
+
+  const { likePostAsync, isPendingLikePost } = useLikePost(post.id);
+  const { deleteLikePostAsync, isPendingDeleteLikePost } = useDeleteLikePost(
+    post.id,
+  );
+
+  const handleLike = () => {
+    if (post.isLiked) {
+      deleteLikePostAsync();
+    } else {
+      likePostAsync();
+    }
+  };
 
   return (
     <article className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground shadow-[0_4px_0_var(--border)]">
@@ -53,7 +69,9 @@ export default function PostCard({ post, onLike, onOpenComments }: Props) {
       <PostActions
         likesCount={post.likesCount}
         commentsCount={post.commentsCount}
-        onLike={onLike}
+        isLiked={post.isLiked}
+        isLikePending={isPendingLikePost || isPendingDeleteLikePost}
+        onLike={handleLike}
         onOpenComments={onOpenComments}
       />
     </article>

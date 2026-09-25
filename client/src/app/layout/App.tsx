@@ -71,7 +71,7 @@ export default function App() {
         </header>
         <div
           id="woodshed-main-container"
-          className="flex items-center flex-1 flex-col gap-4 p-4 pt-0"
+          className="flex items-center flex-1 flex-col gap-4 px-4 pt-2 pb-8"
         >
           <main className="w-full max-w-5xl">
             <Outlet />
