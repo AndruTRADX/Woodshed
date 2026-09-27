@@ -7,6 +7,7 @@ import RegisterPage from "@/features/account/RegisterPage";
 import NotFoundPage from "@/features/errors/NotFoundPage";
 import ServerErrorPage from "@/features/errors/ServerErrorPage";
 import MessagePage from "@/features/messages/MessagePage";
+import PostDetailPage from "@/features/posts/pages/PostDetailsPage";
 import PostsPage from "@/features/posts/PostPage";
 import { createBrowserRouter } from "react-router";
 
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
           {
             path: "/posts",
             element: <PostsPage />,
+          },
+          {
+            path: "/posts/:id",
+            element: <PostDetailPage />,
           },
           {
             path: "/messages",

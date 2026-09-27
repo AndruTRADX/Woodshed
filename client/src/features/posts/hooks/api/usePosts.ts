@@ -4,6 +4,7 @@ import type { UpdatePostRequest } from "@/features/posts/schemas/request/UpdateP
 import type { PostResponse } from "@/features/posts/schemas/response/PostResponse";
 import type { PagedResponse } from "@/shared/schemas/response/PagedResponse";
 import agent from "@/shared/services/agent";
+import { toast } from "@/shared/stores/toastStore";
 import {
   keepPreviousData,
   useMutation,
@@ -46,6 +47,8 @@ export const useCreatePost = () => {
       return await agent.post<string>("/post", post);
     },
     onSuccess: async () => {
+      toast.add({ type: "success", title: "Post published" });
+
       await queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
@@ -62,9 +65,11 @@ export const useUpdatePost = (postId: string) => {
   const queryClient = useQueryClient();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (post: UpdatePostRequest) => {
-      return await agent.post<string>(`/post/${postId}`, post);
+      return await agent.put<string>(`/post/${postId}`, post);
     },
     onSuccess: async () => {
+      toast.add({ type: "success", title: "Post updated" });
+
       await queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
@@ -75,7 +80,7 @@ export const useUpdatePost = (postId: string) => {
   });
 
   return {
-    UpdatePostAsync: mutateAsync,
+    updatePostAsync: mutateAsync,
     isPendingUpdatePost: isPending,
   };
 };
@@ -84,9 +89,11 @@ export const useDeletePost = (postId: string) => {
   const queryClient = useQueryClient();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      return await agent.post(`/post/${postId}`);
+      return await agent.delete(`/post/${postId}`);
     },
     onSuccess: async () => {
+      toast.add({ type: "success", title: "Post deleted" });
+
       await queryClient.invalidateQueries({
         queryKey: ["posts"],
       });

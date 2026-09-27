@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router";
 import { router } from "@/app/routes/route";
 import { ThemeProvider } from "@/app/layout/ThemeProvider";
 import { Toaster } from "@/shared/components/ui/toaster";
+import { ConfirmDialog } from "@/shared/components/ConfirmDialog";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
       <ReactQueryDevtools />
       <ThemeProvider defaultTheme="system" storageKey="woodshed-ui-theme">
         <Toaster />
+        <ConfirmDialog />
         <RouterProvider router={router} />
       </ThemeProvider>
     </QueryClientProvider>

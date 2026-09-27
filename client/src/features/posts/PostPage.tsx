@@ -1,4 +1,5 @@
 import PostCard from "@/features/posts/components/cards/PostCard";
+import { PostComposer } from "@/features/posts/components/common/PostComposer";
 import SkeletonPage from "@/features/posts/components/SkeletonPage";
 import { useGetPosts } from "@/features/posts/hooks/api/usePosts";
 import { ErrorShow } from "@/shared/components/common/ErrorShow";
@@ -31,6 +32,8 @@ export default function PostPage() {
   return (
     <div className="grid grid-cols-1 gap-6">
       <div className="flex flex-col lg:col-span-3 gap-y-8">
+        <PostComposer />
+
         {posts.length === 0 ? (
           <div className="lg:col-span-3">
             <NoContent
@@ -39,7 +42,9 @@ export default function PostPage() {
             />
           </div>
         ) : (
-          posts.map((post) => <PostCard post={post} key={`post-card-${post.id}`} />)
+          posts.map((post) => (
+            <PostCard post={post} key={`post-card-${post.id}`} />
+          ))
         )}
 
         <PaginationControl

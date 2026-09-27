@@ -1,10 +1,12 @@
 import UserAvatar from "@/app/layout/components/UserAvatar";
 import PostActions from "@/features/posts/components/common/PostKeyboard";
+import { PostActionsMenu } from "@/features/posts/components/common/PostMenu";
 import {
   useDeleteLikePost,
   useLikePost,
 } from "@/features/posts/hooks/api/usePostLike";
 import type { PostResponse } from "@/features/posts/schemas/response/PostResponse";
+import { useGetCurrentUser } from "@/shared/hooks/api/useAccount";
 
 interface Props {
   post: PostResponse;
@@ -17,6 +19,8 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 
 export default function PostCard({ post, onOpenComments }: Props) {
   const { user } = post;
+  const { user: currentUser } = useGetCurrentUser();
+  const isOwner = currentUser?.id === post.userId;
 
   const { likePostAsync, isPendingLikePost } = useLikePost(post.id);
   const { deleteLikePostAsync, isPendingDeleteLikePost } = useDeleteLikePost(
@@ -32,7 +36,7 @@ export default function PostCard({ post, onOpenComments }: Props) {
   };
 
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground shadow-[0_4px_0_var(--border)]">
+    <article className="mx-2 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground shadow-[0_4px_0_var(--border)]">
       <header className="flex items-center gap-3">
         <div className="shrink-0 rounded-full bg-linear-to-br from-primary via-brass-light to-brass-dark p-0.5">
           <div className="rounded-full bg-card p-0.5">
@@ -53,14 +57,16 @@ export default function PostCard({ post, onOpenComments }: Props) {
 
         <time
           dateTime={post.createdAt}
-          className="shrink-0 text-xs text-primary/80 [text-shadow:0_1px_0_rgba(0,0,0,0.9)]"
+          className="shrink-0 text-xs text-primary"
         >
-          {dateFormatter.format(new Date(post.createdAt))}
-          {post.hasBeenEdited && " · edited"}
+          {dateFormatter.format(new Date(post.editedAt || post.createdAt))}
+          {post.hasBeenEdited && <span className="text-foreground"> / Edited</span>}
         </time>
+
+        {isOwner && <PostActionsMenu post={post} />}
       </header>
 
-      <div className="rounded-lg border border-border bg-background px-2 py-3 mt-2">
+      <div className="px-2 mt-2">
         <p className="text-sm/6 wrap-break-word whitespace-pre-wrap">
           {post.content}
         </p>
