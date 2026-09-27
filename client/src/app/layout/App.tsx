@@ -21,7 +21,7 @@ const GITHUB_URL = "https://github.com/AndruTRADX/Woodshed";
 export default function App() {
   const { user, errorUser, isLoadingUser } = useGetCurrentUser();
   const isMobile = useIsMobile();
-  const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLElement>();
+  const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLElement>({ border: false });
 
   if (isLoadingUser) {
     return <SkeletonPage />;
@@ -42,7 +42,7 @@ export default function App() {
         <header
           ref={glassRef}
           style={glassStyle}
-          className="rounded-lg ml-2 mr-4 sticky top-2 z-10 flex h-15 shrink-0 items-center justify-between gap-2 bg-popover/30 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+          className=" sticky top-0 z-10 flex h-15 shrink-0 items-center justify-between gap-2 bg-popover/30 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
         >
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />

@@ -28,7 +28,7 @@ type Props = {
 
 export function AppSidebar({ user }: Props) {
   return (
-    <Sidebar variant="floating">
+    <Sidebar>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

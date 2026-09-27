@@ -59,7 +59,11 @@ agent.interceptors.response.use(
   },
   <T>(error: AxiosError<ApiResponse<T>>) => {
     if (!error.response) {
-      // toast.add(`Something went wrong: ${error.message}`)
+      toast.add({
+        type: "error",
+        title: "Something went wrong",
+        description: error.message,
+      })
       return Promise.reject(error);
     }
 
@@ -80,15 +84,25 @@ agent.interceptors.response.use(
             messages.forEach((msg) => errorLines.push(`  • ${msg}`));
           }
           toast.add({
+            type: "error",
             title: `${title}: ${message}`,
             description: errorLines.join("\n"),
           });
         } else {
           toast.add({
+            type: "error",
             title: title,
             description: message,
           });
         }
+        return Promise.reject(error);
+
+      case 401:
+        toast.add({
+          type: "error",
+          title: title,
+          description: message,
+        });
         return Promise.reject(error);
 
       case 404:

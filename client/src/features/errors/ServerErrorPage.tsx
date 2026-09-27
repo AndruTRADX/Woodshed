@@ -24,8 +24,8 @@ export default function ServerErrorPage() {
         <EmptyDescription>{state?.message ?? "Internal Server error"}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent className="flex-row justify-center gap-2">
-        <Button onClick={() => navigate("/activities")} size="lg">
-          Go to the activities
+        <Button onClick={() => navigate("/posts")} size="lg">
+          Go to the posts
         </Button>
       </EmptyContent>
     </Empty>

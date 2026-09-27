@@ -27,9 +27,6 @@ export const useLoginAccount = () => {
         description: "Happy to have you here!",
       });
     },
-    onError: (e) => {
-      toast.add({ type: "error", title: e.message });
-    },
   });
 
   return {
