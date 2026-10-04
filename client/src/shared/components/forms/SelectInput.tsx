@@ -71,7 +71,7 @@ export function SelectInput<T extends FieldValues>({
         <ComboboxContent>
           <ComboboxEmpty>No items found.</ComboboxEmpty>
           <ComboboxList>
-            {(item) => (
+            {(item: Item) => (
               <ComboboxItem key={item.value} value={item}>
                 {item.label}
               </ComboboxItem>

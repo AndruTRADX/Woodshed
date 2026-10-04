@@ -27,7 +27,7 @@ export default function PostDetailPage() {
         </Link>
       </Button>
 
-      <PostCard post={post} linkToDetail={false} />
+      <PostCard post={post} />
     </div>
   );
 }

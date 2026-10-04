@@ -13,11 +13,11 @@ namespace Woodshed.Infrastructure.Services;
 
 public class UserAccountService(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IMapper mapper) : IUserAccountService
 {
-    public async Task<UserAccountResponse> GetUserAccount(string userId, CancellationToken cancellationToken)
+    public async Task<UserAccountResponse> GetUserAccount(string userId, CancellationToken cancellationToken, object? parameters = null)
     {
         return await userManager.Users
             .Where(u => u.Id == userId)
-            .ProjectTo<UserAccountResponse>(mapper.ConfigurationProvider)
+            .ProjectTo<UserAccountResponse>(mapper.ConfigurationProvider, parameters)
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException("UserAccount", userId);
     }

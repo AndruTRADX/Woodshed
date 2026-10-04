@@ -40,41 +40,47 @@ function ToastCard({ toast }: { toast: ToastItem }) {
 
   return (
     <div
-      ref={glassRef}
-      style={glassStyle}
-      onAnimationEnd={() => {
-        if (toast.isExiting) remove(toast.id);
+      onAnimationEnd={(event) => {
+        if (event.target === event.currentTarget && toast.isExiting) {
+          remove(toast.id);
+        }
       }}
       className={cn(
-        "min-w-xs pointer-events-auto flex w-full items-start gap-3 rounded-xl bg-popover/70 px-4 py-3 shadow-lg dark:bg-popover/30",
+        "min-w-xs pointer-events-auto w-full rounded-xl shadow-lg",
         toast.isExiting
           ? "animate-out slide-out-to-right-full fade-out duration-300 ease-out"
           : "animate-in slide-in-from-right-full fade-in duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
       )}
     >
-      {Icon && (
-        <Icon
-          className={cn("mt-0.5 size-4 shrink-0", TOAST_ACCENTS[toast.type])}
-        />
-      )}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-popover-foreground">
-          {toast.title}
-        </p>
-        {toast.description && (
-          <p className="mt-0.5 whitespace-pre-line text-xs text-muted-foreground">
-            {toast.description}
-          </p>
-        )}
-      </div>
-      <button
-        type="button"
-        onClick={() => dismiss(toast.id)}
-        aria-label="Dismiss"
-        className="text-muted-foreground hover:text-foreground"
+      <div
+        ref={glassRef}
+        style={glassStyle}
+        className="flex w-full items-start gap-3 rounded-xl bg-popover/70 px-4 py-3 dark:bg-popover/30"
       >
-        <XIcon className="size-4" />
-      </button>
+        {Icon && (
+          <Icon
+            className={cn("mt-0.5 size-4 shrink-0", TOAST_ACCENTS[toast.type])}
+          />
+        )}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-popover-foreground">
+            {toast.title}
+          </p>
+          {toast.description && (
+            <p className="mt-0.5 whitespace-pre-line text-xs text-muted-foreground">
+              {toast.description}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => dismiss(toast.id)}
+          aria-label="Dismiss"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <XIcon className="size-4" />
+        </button>
+      </div>
     </div>
   );
 }

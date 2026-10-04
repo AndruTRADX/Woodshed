@@ -45,7 +45,7 @@ export const router = createBrowserRouter([
             element: <MessagePage />,
           },
           {
-            path: "/account",
+            path: "/account/:id",
             element: <AccountPage />,
           },
         ],

@@ -37,7 +37,9 @@ function DropdownMenuContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
-  const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLElement>();
+  const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLElement>({
+    preset: "compact",
+  });
 
   return (
     <DropdownMenuPrimitive.Portal>

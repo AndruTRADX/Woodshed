@@ -41,13 +41,13 @@ export const THEME_OPTIONS: THEME_OPTION_TYPE[] = [
   { value: "system", label: "System", icon: Laptop },
 ];
 
-export const SIDEBAR_BLOCKS: SIDEBAR_BLOCK_TYPE[] = [
+export const SIDEBAR_BLOCKS = (accountId: string): SIDEBAR_BLOCK_TYPE[] => [
   {
     title: "My content",
     items: [
       {
         id: "MyAccount",
-        link: "/account",
+        link: `/account/${accountId}`,
         name: "My Account",
         icon: User,
         sound: "do",

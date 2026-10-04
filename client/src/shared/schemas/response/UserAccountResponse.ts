@@ -5,8 +5,9 @@ export const UserAccountResponseSchema = z.object({
   nickName: z.string(),
   biography: z.string(),
   imageUrl: z.string().nullable(),
-  following: z.boolean(),
-  followedBy: z.boolean(),
+  createdAt: z.iso.datetime(),
+  isFollower: z.boolean(),
+  isFollowee: z.boolean(),
   followersCount: z.number(),
   followingsCount: z.number(),
 })

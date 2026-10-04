@@ -5,7 +5,7 @@ namespace Woodshed.Application.Contracts.Identity;
 
 public interface IUserAccountService
 {
-    Task<UserAccountResponse> GetUserAccount(string userId, CancellationToken cancellationToken);
+    Task<UserAccountResponse> GetUserAccount(string userId, CancellationToken cancellationToken, object? parameters = null);
     Task<UserAccountResponse> EditAccountAsync(
         string userId, 
         string nickName, string? name, string? lastName, string? biography,

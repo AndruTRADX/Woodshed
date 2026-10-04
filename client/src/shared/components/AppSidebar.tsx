@@ -27,6 +27,8 @@ type Props = {
 };
 
 export function AppSidebar({ user }: Props) {
+  const SIDEBAR_BLOCKS_LiST = SIDEBAR_BLOCKS(user.id)
+  
   return (
     <Sidebar>
       <SidebarHeader>
@@ -44,7 +46,7 @@ export function AppSidebar({ user }: Props) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {SIDEBAR_BLOCKS.map((block) => (
+        {SIDEBAR_BLOCKS_LiST.map((block) => (
           <SidebarGroup key={block.title}>
             <SidebarGroupLabel>{block.title}</SidebarGroupLabel>
             <SidebarMenu>

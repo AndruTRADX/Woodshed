@@ -18,6 +18,7 @@ interface DisplacementMapParams {
   height: number;
   radius: number;
   depth: number;
+  normalPow?: number;
 }
 
 interface DisplacementFilterParams extends DisplacementMapParams {
@@ -25,52 +26,117 @@ interface DisplacementFilterParams extends DisplacementMapParams {
   chromaticAberration: number;
 }
 
-export function buildDisplacementMap({
+// Signed distance from `(px, py)` (relative to the centre) to a rounded rectangle
+// with half-size `(hw, hh)` and corner radius `r`: negative inside, 0 on the edge.
+// Same function as `roundedRectangleDist` in kwin-effects-glass' glass.glsl.
+function roundedRectDist(
+  px: number,
+  py: number,
+  hw: number,
+  hh: number,
+  r: number,
+) {
+  const qx = Math.abs(px) - hw + r;
+  const qy = Math.abs(py) - hh + r;
+  return (
+    Math.min(Math.max(qx, qy), 0) +
+    Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) -
+    r
+  );
+}
+
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+// Per-pixel displacement for a rounded-rect lens, encoded for feDisplacementMap
+// (R = x, G = y, 128 = no shift). Each pixel is pushed along the edge *normal* by a
+// convex bevel profile, so straight edges only bend perpendicular to themselves and
+// corners bend radially - instead of the old linear-gradient map, which also smeared
+// content sideways along straight edges. Ported from kwin-effects-glass:
+//   edgeFactor   = 1 - |dist| / band
+//   concave      = 1 - sqrt(1 - smoothstep(edgeFactor)^normalPow)
+//   sample point = p - outwardNormal * concave   (i.e. pull from inside → lens)
+export function computeDisplacementPixels({
   width,
   height,
   radius,
   depth,
+  normalPow = 3,
 }: DisplacementMapParams) {
-  const svg = `<svg height="${height}" width="${width}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-    <style>.mix { mix-blend-mode: screen; }</style>
-    <defs>
-      <linearGradient
-        id="Y"
-        x1="0"
-        x2="0"
-        y1="${Math.ceil((radius / height) * 15)}%"
-        y2="${Math.floor(100 - (radius / height) * 15)}%">
-        <stop offset="0%" stop-color="#0F0" />
-        <stop offset="100%" stop-color="#000" />
-      </linearGradient>
-      <linearGradient
-        id="X"
-        x1="${Math.ceil((radius / width) * 15)}%"
-        x2="${Math.floor(100 - (radius / width) * 15)}%"
-        y1="0"
-        y2="0">
-        <stop offset="0%" stop-color="#F00" />
-        <stop offset="100%" stop-color="#000" />
-      </linearGradient>
-    </defs>
-    <rect x="0" y="0" height="${height}" width="${width}" fill="#808080" />
-    <g filter="blur(2px)">
-      <rect x="0" y="0" height="${height}" width="${width}" fill="#000080" />
-      <rect x="0" y="0" height="${height}" width="${width}" fill="url(#Y)" class="mix" />
-      <rect x="0" y="0" height="${height}" width="${width}" fill="url(#X)" class="mix" />
-      <rect
-        x="${depth}"
-        y="${depth}"
-        height="${height - 2 * depth}"
-        width="${width - 2 * depth}"
-        fill="#808080"
-        rx="${radius}"
-        ry="${radius}"
-        filter="blur(${depth}px)" />
-    </g>
-  </svg>`;
+  const w = Math.max(1, Math.round(width));
+  const h = Math.max(1, Math.round(height));
+  const hw = w / 2;
+  const hh = h / 2;
+  const r = Math.min(radius, hw, hh);
+  const band = Math.max(0.1, Math.min(depth, Math.min(hw, hh) * 0.9));
+  const data = new Uint8ClampedArray(w * h * 4);
 
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  for (let y = 0; y < h; y++) {
+    const py = y + 0.5 - hh;
+    for (let x = 0; x < w; x++) {
+      const px = x + 0.5 - hw;
+      const i = (y * w + x) * 4;
+      let dx = 0;
+      let dy = 0;
+
+      const dist = roundedRectDist(px, py, hw, hh, r);
+      if (dist < 0 && -dist < band) {
+        const edge = 1 - -dist / band;
+        const concave =
+          1 - Math.sqrt(1 - Math.pow(smoothstep(edge), normalPow));
+        const gx =
+          roundedRectDist(px + 1, py, hw, hh, r) -
+          roundedRectDist(px - 1, py, hw, hh, r);
+        const gy =
+          roundedRectDist(px, py + 1, hw, hh, r) -
+          roundedRectDist(px, py - 1, hw, hh, r);
+        const len = Math.hypot(gx, gy) || 1;
+        dx = -(gx / len) * concave;
+        dy = -(gy / len) * concave;
+      }
+
+      data[i] = 128 + dx * 127;
+      data[i + 1] = 128 + dy * 127;
+      data[i + 2] = 128;
+      data[i + 3] = 255;
+    }
+  }
+
+  return { data, width: w, height: h };
+}
+
+// Maps are pure functions of their params, and surfaces re-measure on every resize,
+// so cache the encoded PNGs. Small LRU: there are only a handful of glass surfaces.
+const MAP_CACHE_LIMIT = 32;
+const mapCache = new Map<string, string>();
+
+export function buildDisplacementMap(params: DisplacementMapParams) {
+  const w = Math.max(1, Math.round(params.width));
+  const h = Math.max(1, Math.round(params.height));
+  const key = `${w}x${h}|${params.radius.toFixed(1)}|${params.depth.toFixed(1)}|${params.normalPow ?? 3}`;
+
+  const cached = mapCache.get(key);
+  if (cached) {
+    mapCache.delete(key);
+    mapCache.set(key, cached);
+    return cached;
+  }
+
+  const { data } = computeDisplacementPixels({
+    ...params,
+    width: w,
+    height: h,
+  });
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  canvas.getContext("2d")?.putImageData(new ImageData(data, w, h), 0, 0);
+  const url = canvas.toDataURL("image/png");
+
+  mapCache.set(key, url);
+  if (mapCache.size > MAP_CACHE_LIMIT) {
+    mapCache.delete(mapCache.keys().next().value as string);
+  }
+  return url;
 }
 
 export function buildDisplacementFilter({
@@ -78,6 +144,7 @@ export function buildDisplacementFilter({
   height,
   radius,
   depth,
+  normalPow,
   strength,
   chromaticAberration,
 }: DisplacementFilterParams) {
@@ -86,6 +153,7 @@ export function buildDisplacementFilter({
     height,
     radius,
     depth,
+    normalPow,
   });
 
   const svg = `<svg height="${height}" width="${width}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
@@ -174,27 +242,32 @@ export function detectLiquidGlassSupport() {
   return svgFilterSupport;
 }
 
-// "large" is for big, low-frequency surfaces (navbar, dialogs, the profile avatar
-// frame). "compact" is for small/dense ones (Select, Combobox, Popover, DropdownMenu,
-// HoverCard, glass-* buttons) — a softer blur and a thinner edge so the distortion
-// still reads at that size. `strength`/`chromaticAberration` stay the same between the
-// two, so only the softness and edge width change, not the distortion's character.
+// "large" is for big, low-frequency surfaces (navbar, dialogs, toasts, the profile
+// avatar frame). "compact" is for small/dense ones (Select, Combobox, Popover,
+// DropdownMenu, HoverCard, glass-* buttons) - a thinner bevel and softer lens so the
+// distortion still reads at that size.
+//
+// Values follow the macOS-26 tuning used for kwin-effects-glass: a wide-ish bevel
+// with a steep profile (lensing hugs the rim, centre stays clear) and only a hint of
+// RGB dispersion. Brightness/saturation are not here: they're theme tokens
+// (--glass-brightness / --glass-saturate in styles.css), because dark glass wants to
+// be slightly dimmer and light glass slightly brighter.
+//
+// `strength` is the feDisplacementMap scale: the max pull at the rim is ~strength/2 px.
 export const LIQUID_GLASS_PRESETS = {
   large: {
-    depth: 5,
+    depth: 18,
+    normalPow: 3,
     blur: 2,
-    strength: 40,
-    chromaticAberration: 5,
-    brightness: 1.18,
-    saturate: 1.65,
+    strength: 48,
+    chromaticAberration: 1.5,
   },
   compact: {
-    depth: 2,
+    depth: 8,
+    normalPow: 3,
     blur: 3,
-    strength: 40,
-    chromaticAberration: 4,
-    brightness: 1.1,
-    saturate: 1.5,
+    strength: 32,
+    chromaticAberration: 1,
   },
 } as const;
 
