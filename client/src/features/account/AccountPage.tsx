@@ -1,22 +1,21 @@
-
 import SkeletonPage from "@/app/layout/components/SkeletonPage";
 import AccountContent from "@/features/account/components/AccountContent";
 import AccountHeader from "@/features/account/components/AccountHeader";
 import { useGetAccountById } from "@/features/account/hooks/api/useAccount";
 import { ErrorShow } from "@/shared/components/common/ErrorShow";
 import { NoContent } from "@/shared/components/common/NoContent";
-import { useParams } from "react-router"
+import { useParams } from "react-router";
 
 export default function AccountPage() {
-  const { id } = useParams()
-  const { account, isLoadingAccount, errorAccount } = useGetAccountById(id)
+  const { id } = useParams();
+  const { account, isLoadingAccount, errorAccount } = useGetAccountById(id);
 
   if (isLoadingAccount) {
-    return <SkeletonPage />
+    return <SkeletonPage />;
   }
 
   if (errorAccount) {
-    return <ErrorShow error={errorAccount} />
+    return <ErrorShow error={errorAccount} />;
   }
 
   if (!account) {
@@ -25,7 +24,7 @@ export default function AccountPage() {
         title="No profile"
         description={`The profile you are looking for does not exists`}
       />
-    )
+    );
   }
 
   return (
@@ -33,5 +32,5 @@ export default function AccountPage() {
       <AccountHeader account={account} />
       <AccountContent account={account} />
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@sharedUi/tabs"
-import { useMediaQuery } from "@/shared/hooks/useMediaQuery"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@sharedUi/tabs";
+import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import type { UserAccountResponse } from "@/shared/schemas/response/UserAccountResponse";
 import AccountAboutCard from "@/features/account/components/cards/AccountAboutCard";
 import AccountPhotosCard from "@/features/account/components/cards/AccountPhotosCard";
@@ -7,17 +7,22 @@ import AccountFollowersCard from "@/features/account/components/cards/AccountFol
 import AccountFollowingCard from "@/features/account/components/cards/AccountFollowingCard";
 
 interface Props {
-  account: UserAccountResponse
+  account: UserAccountResponse;
 }
 
 export default function AccountContent({ account }: Props) {
-  const isDesktop = useMediaQuery("(min-width: 1024px)")
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   return (
-    <Tabs defaultValue="about" orientation={isDesktop ? "vertical" : "horizontal"}>
+    <Tabs
+      defaultValue="about"
+      orientation={isDesktop ? "vertical" : "horizontal"}
+    >
       <TabsList
         variant="line"
-        className={isDesktop ? undefined : "w-full justify-start overflow-x-auto"}
+        className={
+          isDesktop ? undefined : "w-full justify-start overflow-x-auto"
+        }
       >
         <TabsTrigger value="about">About</TabsTrigger>
         <TabsTrigger value="photos">Photos</TabsTrigger>
@@ -37,5 +42,5 @@ export default function AccountContent({ account }: Props) {
         <AccountFollowingCard />
       </TabsContent>
     </Tabs>
-  )
+  );
 }

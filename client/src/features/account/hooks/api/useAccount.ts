@@ -14,11 +14,11 @@ import type { UserAccountResponse } from "@/shared/schemas/response/UserAccountR
 import type { PagedRequest } from "@/shared/schemas/request/PagedRequest";
 import type { PhotoResponse } from "@/features/account/schemas/response/PhotoResponse";
 import type { PagedResponse } from "@/shared/schemas/response/PagedResponse";
-import { useMemo } from "react";
 import type { UserResponse } from "@/shared/schemas/response/UserResponse";
 import type { EditAccountRequest } from "@/features/account/schemas/request/EditAccountRequest";
 import type { AddPhotoRequest } from "@/features/account/schemas/request/AddPhotoRequest";
 import { useOptimisticUpdate } from "@/shared/hooks/useOptimisticUpdate";
+import { useGetCurrentUser } from "@/shared/hooks/api/useAccount";
 import type { FollowerResponse } from "@/features/account/schemas/response/FollowerResponse";
 import type { FolloweeResponse } from "@/features/account/schemas/response/FolloweeResponse";
 
@@ -56,7 +56,7 @@ export const useEditAccount = () => {
 
         return {
           ...data,
-          displayName: account.nickName,
+          nickName: account.nickName,
           biography: account.biography,
         };
       });
@@ -126,7 +126,7 @@ export const useGetAccountPhotosById = (
   id: string | undefined,
   params: PagedRequest,
 ) => {
-  const queryClient = useQueryClient();
+  const { user: currentUser } = useGetCurrentUser();
 
   const {
     data: pagedPhotos,
@@ -142,9 +142,7 @@ export const useGetAccountPhotosById = (
     enabled: !!id,
   });
 
-  const isCurrentUser = useMemo(() => {
-    return id === queryClient.getQueryData<UserResponse>(["user"])?.id;
-  }, [id, queryClient]);
+  const isCurrentUser = !!id && id === currentUser?.id;
 
   return {
     pagedPhotos,
@@ -263,10 +261,8 @@ export const useSetMainPhotoAccount = () => {
 
 // Account Following
 const showsFollowState = (queryKey: readonly unknown[]) =>
-  (queryKey[0] === "account" &&
-    (queryKey[2] === "followers" || queryKey[2] === "following")) ||
-  queryKey[0] === "activity" ||
-  queryKey[0] === "activities";
+  queryKey[0] === "account" &&
+  (queryKey[2] === "followers" || queryKey[2] === "following");
 
 export const useFollowAccount = () => {
   const queryClient = useQueryClient();
@@ -279,7 +275,7 @@ export const useFollowAccount = () => {
     optimisticQueryKey: ({ targetUserId }) => ["account", targetUserId],
     updater: (account) => ({
       ...account,
-      following: true,
+      isFollowee: true,
       followersCount: account.followersCount + 1,
     }),
   });
@@ -320,7 +316,7 @@ export const useUnfollowAccount = () => {
     optimisticQueryKey: ({ targetUserId }) => ["account", targetUserId],
     updater: (account) => ({
       ...account,
-      following: false,
+      isFollowee: false,
       followersCount: Math.max(0, account.followersCount - 1),
     }),
   });
@@ -337,9 +333,6 @@ export const useUnfollowAccount = () => {
       });
       await queryClient.invalidateQueries({
         queryKey: ["account", currentUserId],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["followers"],
       });
       await queryClient.invalidateQueries({
         predicate: (query) => showsFollowState(query.queryKey),

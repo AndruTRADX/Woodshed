@@ -39,7 +39,10 @@ export default function PostCard({ post, onOpenComments }: Props) {
   return (
     <article className="mx-2 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground shadow-[0_4px_0_var(--border)]">
       <header className="flex items-center gap-3">
-        <Link to={`/account/${post.userId}`} className="shrink-0 rounded-full bg-linear-to-br from-primary via-brass-light to-brass-dark p-0.5">
+        <Link
+          to={`/account/${post.userId}`}
+          className="shrink-0 rounded-full bg-linear-to-br from-primary via-brass-light to-brass-dark p-0.5"
+        >
           <div className="rounded-full bg-card p-0.5">
             <UserAvatar
               nickname={user.nickName}
@@ -50,7 +53,12 @@ export default function PostCard({ post, onOpenComments }: Props) {
         </Link>
 
         <div className="min-w-0 flex-1 leading-tight">
-          <Link to={`/account/${post.userId}`} className="truncate font-semibold hover:underline">{user.nickName}</Link>
+          <Link
+            to={`/account/${post.userId}`}
+            className="truncate font-semibold hover:underline"
+          >
+            {user.nickName}
+          </Link>
           <p className="truncate text-xs text-muted-foreground">
             {user.biography}
           </p>
@@ -61,7 +69,9 @@ export default function PostCard({ post, onOpenComments }: Props) {
           className="shrink-0 text-xs text-primary"
         >
           {dateFormatter.format(new Date(post.editedAt || post.createdAt))}
-          {post.hasBeenEdited && <span className="text-foreground"> / Edited</span>}
+          {post.hasBeenEdited && (
+            <span className="text-foreground"> / Edited</span>
+          )}
         </time>
 
         {isOwner && <PostActionsMenu post={post} />}

@@ -63,7 +63,7 @@ agent.interceptors.response.use(
         type: "error",
         title: "Something went wrong",
         description: error.message,
-      })
+      });
       return Promise.reject(error);
     }
 

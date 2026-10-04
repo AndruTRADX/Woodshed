@@ -19,7 +19,7 @@ export function PostForm({
   onSubmit,
   isPending,
   formId,
-  rows = 1
+  rows = 1,
 }: Props) {
   const {
     formState: { isValid },
@@ -43,7 +43,13 @@ export function PostForm({
       />
 
       <div className="flex justify-end">
-        <Button type="submit" form={formId} disabled={isDisabled} size="icon-xl" className="rounded-full aspect-square">
+        <Button
+          type="submit"
+          form={formId}
+          disabled={isDisabled}
+          size="icon-xl"
+          className="rounded-full aspect-square"
+        >
           {isPending ? (
             <>
               <Spinner />

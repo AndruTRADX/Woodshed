@@ -9,7 +9,7 @@ import { SkeletonFollowingCard } from "@/features/account/components/cards/compo
 import { NoContent } from "@/shared/components/common/NoContent";
 import { FolloweeUserRow } from "@/features/account/components/rows/FolloweeUserRow";
 
-export default function ProfileFollowingCard() {
+export default function AccountFollowingCard() {
   const { id } = useParams();
   const { pageIndex, pageSize, setPageIndex } = usePagedParams("following");
 

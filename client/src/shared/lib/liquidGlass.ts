@@ -260,14 +260,14 @@ export const LIQUID_GLASS_PRESETS = {
     normalPow: 3,
     blur: 2,
     strength: 48,
-    chromaticAberration: 1.5,
+    chromaticAberration: 3,
   },
   compact: {
     depth: 8,
     normalPow: 3,
     blur: 3,
     strength: 32,
-    chromaticAberration: 1,
+    chromaticAberration: 2.5,
   },
 } as const;
 

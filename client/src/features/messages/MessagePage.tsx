@@ -1,5 +1,3 @@
 export default function MessagePage() {
-  return (
-    <div>MessagePage</div>
-  )
+  return <div>MessagePage</div>;
 }

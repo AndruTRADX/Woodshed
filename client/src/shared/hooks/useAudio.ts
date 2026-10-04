@@ -9,7 +9,6 @@ import {
   type SoundName,
 } from "@/shared/lib/sounds";
 
-
 export const useAudio = () => {
   const volume = useAudioStore((state) => state.volume);
   const muted = useAudioStore((state) => state.muted);

@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/ui/button"
+import { Button } from "@/shared/components/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -6,13 +6,13 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/shared/components/ui/empty"
+} from "@/shared/components/ui/empty";
 import { XIcon } from "lucide-react";
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router";
 
 export default function NotFoundPage() {
-  const navigate = useNavigate()
-  const { state } = useLocation()
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
   return (
     <Empty>
@@ -22,7 +22,8 @@ export default function NotFoundPage() {
         </EmptyMedia>
         <EmptyTitle>{state?.title ?? "Content not found"}</EmptyTitle>
         <EmptyDescription>
-          {state?.message ?? "The content you are looking for has not been found"}
+          {state?.message ??
+            "The content you are looking for has not been found"}
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent className="flex-row justify-center gap-2">
@@ -31,5 +32,5 @@ export default function NotFoundPage() {
         </Button>
       </EmptyContent>
     </Empty>
-  )
+  );
 }

@@ -1,5 +1,3 @@
 export default function SkeletonPage() {
-  return (
-    <div>SkeletonPage</div>
-  )
+  return <div>SkeletonPage</div>;
 }

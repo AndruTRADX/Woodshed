@@ -15,12 +15,7 @@ export interface ConfirmOptions {
 
   /** shadcn `Button` variant for the confirm button. Defaults to `"default"`; `useConfirmDialog`'s `confirmDelete` overrides this to `"destructive"`. */
   confirmVariant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
+    "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 
   /** Runs when the user clicks confirm, before the dialog closes and the `confirm()` promise resolves `true`. Put the actual side effect (the mutation) here. */
   onConfirm?: () => void | Promise<void>;

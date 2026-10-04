@@ -1,13 +1,13 @@
-import { useSyncExternalStore } from "react"
+import { useSyncExternalStore } from "react";
 
 export function useMediaQuery(query: string) {
-  const getSnapshot = () => window.matchMedia(query).matches
+  const getSnapshot = () => window.matchMedia(query).matches;
 
   const subscribe = (onChange: () => void) => {
-    const mediaQueryList = window.matchMedia(query)
-    mediaQueryList.addEventListener("change", onChange)
-    return () => mediaQueryList.removeEventListener("change", onChange)
-  }
+    const mediaQueryList = window.matchMedia(query);
+    mediaQueryList.addEventListener("change", onChange);
+    return () => mediaQueryList.removeEventListener("change", onChange);
+  };
 
-  return useSyncExternalStore(subscribe, getSnapshot)
+  return useSyncExternalStore(subscribe, getSnapshot);
 }

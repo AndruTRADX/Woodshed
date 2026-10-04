@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const UserAccountResponseSchema = z.object({
   id: z.string(),
@@ -10,6 +10,6 @@ export const UserAccountResponseSchema = z.object({
   isFollowee: z.boolean(),
   followersCount: z.number(),
   followingsCount: z.number(),
-})
+});
 
-export type UserAccountResponse = z.infer<typeof UserAccountResponseSchema>
+export type UserAccountResponse = z.infer<typeof UserAccountResponseSchema>;

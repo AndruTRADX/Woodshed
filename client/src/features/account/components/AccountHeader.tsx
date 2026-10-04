@@ -1,8 +1,7 @@
-import { useCallback, useMemo } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { Button } from "@sharedUi/button";
 import type { UserAccountResponse } from "@/shared/schemas/response/UserAccountResponse";
-import type { UserResponse } from "@/shared/schemas/response/UserResponse";
+import { useGetCurrentUser } from "@/shared/hooks/api/useAccount";
 import {
   useFollowAccount,
   useUnfollowAccount,
@@ -19,11 +18,8 @@ interface Props {
 }
 
 export default function AccountHeader({ account }: Props) {
-  const queryClient = useQueryClient();
-
-  const isCurrentUser = useMemo(() => {
-    return account.id === queryClient.getQueryData<UserResponse>(["user"])?.id;
-  }, [account.id, queryClient]);
+  const { user: currentUser } = useGetCurrentUser();
+  const isCurrentUser = currentUser?.id === account.id;
 
   const { followAccountAsync, isPendingFollowAccount } = useFollowAccount();
   const { unfollowAccountAsync, isPendingUnfollowAccount } =
@@ -35,7 +31,12 @@ export default function AccountHeader({ account }: Props) {
     } else {
       await followAccountAsync({ targetUserId: account.id });
     }
-  }, [account.isFollowee, account.id, followAccountAsync, unfollowAccountAsync]);
+  }, [
+    account.isFollowee,
+    account.id,
+    followAccountAsync,
+    unfollowAccountAsync,
+  ]);
 
   const { ref: glassRef, style: glassStyle } = useLiquidGlass<HTMLDivElement>();
 
@@ -64,7 +65,9 @@ export default function AccountHeader({ account }: Props) {
                 alt={account.nickName}
                 className="rounded-xl"
               />
-              <AvatarFallback>{account.nickName}</AvatarFallback>
+              <AvatarFallback className="rounded-xl text-3xl">
+                {account.nickName.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
           </div>
 

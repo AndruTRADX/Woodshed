@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/ui/button"
+import { Button } from "@/shared/components/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -6,13 +6,13 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/shared/components/ui/empty"
+} from "@/shared/components/ui/empty";
 import { ComputerIcon } from "lucide-react";
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router";
 
 export default function ServerErrorPage() {
-  const navigate = useNavigate()
-  const { state } = useLocation()
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
   return (
     <Empty>
@@ -21,7 +21,9 @@ export default function ServerErrorPage() {
           <ComputerIcon stroke="2" />
         </EmptyMedia>
         <EmptyTitle>{state?.title ?? "There has been an error"}</EmptyTitle>
-        <EmptyDescription>{state?.message ?? "Internal Server error"}</EmptyDescription>
+        <EmptyDescription>
+          {state?.message ?? "Internal Server error"}
+        </EmptyDescription>
       </EmptyHeader>
       <EmptyContent className="flex-row justify-center gap-2">
         <Button onClick={() => navigate("/posts")} size="lg">
@@ -29,5 +31,5 @@ export default function ServerErrorPage() {
         </Button>
       </EmptyContent>
     </Empty>
-  )
+  );
 }

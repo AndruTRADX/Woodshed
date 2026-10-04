@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const UserResponseSchema = z.object({
   id: z.string(),
@@ -9,6 +9,6 @@ export const UserResponseSchema = z.object({
   biography: z.string(),
   imageUrl: z.string(),
   createdAt: z.iso.datetime(),
-})
+});
 
-export type UserResponse = z.infer<typeof UserResponseSchema>
+export type UserResponse = z.infer<typeof UserResponseSchema>;

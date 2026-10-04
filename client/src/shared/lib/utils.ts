@@ -1,57 +1,55 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import z from "zod"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import z from "zod";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const requiredString = (fieldName: string, min = 1, max?: number) => {
-  const hasCustomMin = min > 1
+  const hasCustomMin = min > 1;
 
   let schema = z
     .string({ message: `${fieldName} is required` })
     .min(1, `${fieldName} is required`)
     .refine(
-      val => !hasCustomMin || val.length >= min,
-      `${fieldName} must have at least ${min} characters`
-    )
+      (val) => !hasCustomMin || val.length >= min,
+      `${fieldName} must have at least ${min} characters`,
+    );
 
   if (max !== undefined) {
     schema = schema.refine(
-      val => val.length <= max,
-      `${fieldName} must not exceed ${max} characters`
-    )
+      (val) => val.length <= max,
+      `${fieldName} must not exceed ${max} characters`,
+    );
   }
 
-  return schema
-}
+  return schema;
+};
 
 export const optionalString = (fieldName: string, max?: number) => {
-
-  let schema = z
-    .string()
+  let schema = z.string();
 
   if (max !== undefined) {
     schema = schema.refine(
-      val => val.length <= max,
-      `${fieldName} must not exceed ${max} characters`
-    )
+      (val) => val.length <= max,
+      `${fieldName} must not exceed ${max} characters`,
+    );
   }
 
-  return schema.optional()
-}
+  return schema.optional();
+};
 
 export function debounce<Args extends unknown[]>(
   fn: (...args: Args) => void,
-  delay = 300
+  delay = 300,
 ): (...args: Args) => void {
-  let timer: ReturnType<typeof setTimeout>
+  let timer: ReturnType<typeof setTimeout>;
 
   return (...args: Args) => {
-    clearTimeout(timer)
+    clearTimeout(timer);
     timer = setTimeout(() => {
-      fn(...args)
-    }, delay)
-  }
+      fn(...args);
+    }, delay);
+  };
 }

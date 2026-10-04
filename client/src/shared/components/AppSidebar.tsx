@@ -27,8 +27,8 @@ type Props = {
 };
 
 export function AppSidebar({ user }: Props) {
-  const SIDEBAR_BLOCKS_LiST = SIDEBAR_BLOCKS(user.id)
-  
+  const SIDEBAR_BLOCKS_LiST = SIDEBAR_BLOCKS(user.id);
+
   return (
     <Sidebar>
       <SidebarHeader>

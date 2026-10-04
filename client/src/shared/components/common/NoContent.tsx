@@ -1,10 +1,15 @@
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@sharedUi/empty"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@sharedUi/empty";
 import { X } from "lucide-react";
 
-
 interface Props {
-  title?: string
-  description?: string
+  title?: string;
+  description?: string;
 }
 
 export function NoContent({ title, description }: Props) {
@@ -20,5 +25,5 @@ export function NoContent({ title, description }: Props) {
         </EmptyDescription>
       </EmptyHeader>
     </Empty>
-  )
+  );
 }

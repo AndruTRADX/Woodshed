@@ -21,7 +21,7 @@ import {
 import type { PhotoResponse } from "@/features/account/schemas/response/PhotoResponse";
 import { toast } from "@/shared/stores/toastStore";
 import { SkeletonPhotosCard } from "@/features/account/components/cards/components/SkeletonPhotosCard";
-import { Hamburger, Plus, Star, Trash, X } from "lucide-react";
+import { Ellipsis, Plus, Star, Trash, X } from "lucide-react";
 import { NoContent } from "@/shared/components/common/NoContent";
 import SubmitPhotoForm from "@/features/account/forms/SubmitPhotoForm";
 
@@ -132,8 +132,9 @@ export default function AccountPhotosCard() {
                         onClick={(e) => e.stopPropagation()}
                         disabled={isPendingSetMainPhoto || isPendingDeletePhoto}
                         className="absolute top-2 right-2"
+                        aria-label="Photo options"
                       >
-                        <Hamburger />
+                        <Ellipsis />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

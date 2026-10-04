@@ -36,7 +36,6 @@ function getAudioElement(sound: SoundName): HTMLAudioElement {
 
 const clampVolume = (volume: number) => Math.min(1, Math.max(0, volume));
 
-
 export function playSound(
   sound: SoundName,
   masterVolume: number,

@@ -1,9 +1,8 @@
-import { useCallback, useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import { Button } from "@sharedUi/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@sharedUi/card";
 import { PenBox, X } from "lucide-react";
-import type { UserResponse } from "@/shared/schemas/response/UserResponse";
+import { useGetCurrentUser } from "@/shared/hooks/api/useAccount";
 import type { UserAccountResponse } from "@/shared/schemas/response/UserAccountResponse";
 import EditAccountForm from "@/features/account/forms/EditAccountForm";
 
@@ -12,12 +11,9 @@ interface Props {
 }
 
 export default function AccountAboutCard({ account }: Props) {
-  const queryClient = useQueryClient();
   const [editMode, setEditMode] = useState(false);
-
-  const isCurrentUser = useMemo(() => {
-    return account.id === queryClient.getQueryData<UserResponse>(["user"])?.id;
-  }, [account.id, queryClient]);
+  const { user: currentUser } = useGetCurrentUser();
+  const isCurrentUser = currentUser?.id === account.id;
 
   const handleEditAccount = useCallback(() => {
     setEditMode((prev) => !prev);

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import {
   Card,
@@ -50,10 +50,9 @@ export default function SubmitPhotoForm({ onSuccess }: Props) {
   const {
     formState: { isValid, isSubmitting: isSubmittingForm },
     control,
-    watch,
   } = form;
 
-  const rawFile = watch("file");
+  const rawFile = useWatch({ control, name: "file" });
 
   const rawImageUrl = useMemo(
     () => (rawFile ? URL.createObjectURL(rawFile) : null),
@@ -101,6 +100,7 @@ export default function SubmitPhotoForm({ onSuccess }: Props) {
         rawImageUrl,
         croppedAreaPixels,
         rawFile.name,
+        rawFile.type,
       );
       setCroppedFile(cropped);
       setStep(3);
@@ -131,7 +131,7 @@ export default function SubmitPhotoForm({ onSuccess }: Props) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Submit Photo — Step {step} of 3</CardTitle>
+        <CardTitle>Submit Photo - Step {step} of 3</CardTitle>
         <CardDescription>{STEP_LABELS[step]}</CardDescription>
       </CardHeader>
       <CardContent>

@@ -30,7 +30,12 @@ export function FollowerUserRow({ follower: { follower, followedAt } }: Props) {
     } else {
       await followAccountAsync({ targetUserId: follower.id });
     }
-  }, [follower.isFollowee, follower.id, followAccountAsync, unfollowAccountAsync]);
+  }, [
+    follower.isFollowee,
+    follower.id,
+    followAccountAsync,
+    unfollowAccountAsync,
+  ]);
 
   return (
     <div className="flex items-center justify-between gap-3">
