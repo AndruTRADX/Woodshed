@@ -8,7 +8,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
-import { Button } from "@/shared/components/ui/button";
 import { useConfirmDialogStore } from "@/shared/stores/confirmDialogStore";
 
 export const ConfirmDialog = () => {
@@ -35,9 +34,7 @@ export const ConfirmDialog = () => {
             variant={options.confirmVariant}
             size="default"
           >
-            <Button variant={options.confirmVariant}>
-              {options.confirmText}
-            </Button>
+            {options.confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

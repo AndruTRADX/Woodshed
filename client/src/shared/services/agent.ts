@@ -105,6 +105,14 @@ agent.interceptors.response.use(
         });
         return Promise.reject(error);
 
+      case 422:
+        toast.add({
+          type: "error",
+          title: title,
+          description: message,
+        });
+        return Promise.reject(error);
+
       case 404:
         router.navigate("/not-found", { state: error.response.data });
         return Promise.reject(error);

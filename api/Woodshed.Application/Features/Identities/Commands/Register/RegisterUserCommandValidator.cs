@@ -27,7 +27,9 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .MinimumLength(3)
             .WithMessage("NickName is required and must have at least 3 characters")
             .MaximumLength(64)
-            .WithMessage("NickName must not exceed 64 characters");
+            .WithMessage("NickName must not exceed 64 characters")
+            .Matches("^[a-zA-Z0-9_.]+$")
+            .WithMessage("Nickname can only contain letters, numbers, dots, and underscores.");
 
         RuleFor(x => x.Account.Name)
             .MaximumLength(155)

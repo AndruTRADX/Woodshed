@@ -21,6 +21,7 @@ export function PostComposer() {
 
   const onSubmit = async (data: CreatePostRequest) => {
     await createPostAsync(data);
+    form.reset();
   };
 
   return (

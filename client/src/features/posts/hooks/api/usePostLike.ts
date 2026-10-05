@@ -1,40 +1,51 @@
 import type { PostResponse } from "@/features/posts/schemas/response/PostResponse";
-import { useOptimisticUpdate } from "@/shared/hooks/useOptimisticUpdate";
 import type { PagedResponse } from "@/shared/schemas/response/PagedResponse";
 import agent from "@/shared/services/agent";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const updatePostInPagedCache = (
-  paged: PagedResponse<PostResponse>,
-  postId: string,
-  isLiked: boolean,
-): PagedResponse<PostResponse> => ({
-  ...paged,
-  data: paged.data.map((post) =>
-    post.id === postId
-      ? {
-          ...post,
-          isLiked,
-          likesCount: post.likesCount + (isLiked ? 1 : -1),
-        }
-      : post,
-  ),
+const updatePost = (post: PostResponse, isLiked: boolean): PostResponse => ({
+  ...post,
+  isLiked,
+  likesCount: post.likesCount + (isLiked ? 1 : -1),
 });
 
-export const useLikePost = (postId: string) => {
-  const { onMutate, onError } = useOptimisticUpdate<
-    PagedResponse<PostResponse>,
-    void
-  >({
-    optimisticQueryKey: () => ["posts"],
-    updater: (paged) => updatePostInPagedCache(paged, postId, true),
-  });
+const useTogglePostLike = (postId: string, isLiked: boolean) => {
+  const queryClient = useQueryClient();
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => agent.post(`/post/${postId}/likes`),
-    onMutate,
-    onError,
+  return useMutation({
+    mutationFn: () =>
+      isLiked
+        ? agent.post(`/post/${postId}/likes`)
+        : agent.delete(`/post/${postId}/likes`),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+      await queryClient.cancelQueries({ queryKey: ["post", postId] });
+
+      queryClient.setQueriesData<PagedResponse<PostResponse>>(
+        { queryKey: ["posts"] },
+        (paged) =>
+          paged && {
+            ...paged,
+            data: paged.data.map((post) =>
+              post.id === postId ? updatePost(post, isLiked) : post,
+            ),
+          },
+      );
+
+      queryClient.setQueryData<PostResponse>(
+        ["post", postId],
+        (post) => post && updatePost(post, isLiked),
+      );
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["posts"] });
+      await queryClient.invalidateQueries({ queryKey: ["post", postId] });
+    },
   });
+};
+
+export const useLikePost = (postId: string) => {
+  const { mutateAsync, isPending } = useTogglePostLike(postId, true);
 
   return {
     likePostAsync: mutateAsync,
@@ -43,19 +54,7 @@ export const useLikePost = (postId: string) => {
 };
 
 export const useDeleteLikePost = (postId: string) => {
-  const { onMutate, onError } = useOptimisticUpdate<
-    PagedResponse<PostResponse>,
-    void
-  >({
-    optimisticQueryKey: () => ["posts"],
-    updater: (paged) => updatePostInPagedCache(paged, postId, false),
-  });
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => agent.delete(`/post/${postId}/likes`),
-    onMutate,
-    onError,
-  });
+  const { mutateAsync, isPending } = useTogglePostLike(postId, false);
 
   return {
     deleteLikePostAsync: mutateAsync,

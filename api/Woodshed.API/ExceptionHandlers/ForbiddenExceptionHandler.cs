@@ -20,7 +20,7 @@ public class ForbiddenExceptionHandler(ILogger<ForbiddenExceptionHandler> logger
 
         var problemDetails = new ApiResponse<object>("Forbidden", forbiddenException.Message, []);
 
-        httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return true;

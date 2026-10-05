@@ -7,7 +7,8 @@ import { useNavigate } from "react-router";
 export const useGetCurrentUser = () => {
   const { data, isLoading, error } = useQuery<UserResponse | null>({
     queryKey: ["user"],
-    queryFn: () => agent.get<UserResponse>(`/identity/my-account`),
+    queryFn: async () =>
+      (await agent.get<UserResponse>(`/identity/my-account`)) ?? null,
     staleTime: 1000 * 60 * 5,
     retry: false,
   });
@@ -28,12 +29,7 @@ export const useLogoutAccount = () => {
       return await agent.post("/identity/sign-out");
     },
     onSuccess: async () => {
-      queryClient.removeQueries({
-        queryKey: ["user"],
-      });
-      queryClient.removeQueries({
-        queryKey: ["posts"],
-      });
+      queryClient.removeQueries();
       navigate(`/login`);
       toast.add({
         title: "Goodbye :(",

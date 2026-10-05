@@ -12,6 +12,7 @@ import {
 } from "@/features/account/schemas/request/EditAccountRequest";
 import { toast } from "@/shared/stores/toastStore";
 import { useEditAccount } from "@/features/account/hooks/api/useAccount";
+import { useGetCurrentUser } from "@/shared/hooks/api/useAccount";
 
 interface Props {
   account: UserAccountResponse;
@@ -25,12 +26,15 @@ export default function EditAccountForm({
   onCancel,
 }: Props) {
   const { editAccountAsync, isPendingEditAccount } = useEditAccount();
+  const { user } = useGetCurrentUser();
 
   const form = useForm<EditAccountRequest>({
     resolver: zodResolver(EditAccountRequestSchema),
     mode: "onTouched",
     defaultValues: {
       nickName: account.nickName,
+      name: user?.name ?? "",
+      lastName: user?.lastName ?? "",
       biography: account.biography ?? "",
     },
   });

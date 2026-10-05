@@ -57,8 +57,12 @@ app.UseAuthorization();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Identity Api
-app.MapGroup("api").MapIdentityApi<ApplicationUser>();
+app.MapGroup("api")
+    .MapIdentityApi<ApplicationUser>()
+    .AddEndpointFilter(async (context, next) =>
+        context.HttpContext.Request.Path.StartsWithSegments("/api/register")
+            ? Results.NotFound()
+            : await next(context));
 
 app.MapControllers();
 // app.MapFallbackToController("Index", "Fallback"); // Uncomment when having wwwroot/index.html

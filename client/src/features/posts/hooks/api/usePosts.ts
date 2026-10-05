@@ -11,10 +11,11 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useLocation, useNavigate } from "react-router";
 
 export const useGetPosts = (params: PostSpecificationParams) => {
   const { data, isLoading, error } = useQuery<PagedResponse<PostResponse>>({
-    queryKey: ["posts"],
+    queryKey: ["posts", params],
     queryFn: () => agent.get<PagedResponse<PostResponse>>(`/post`, { params }),
     placeholderData: keepPreviousData,
   });
@@ -87,12 +88,19 @@ export const useUpdatePost = (postId: string) => {
 
 export const useDeletePost = (postId: string) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
       return await agent.delete(`/post/${postId}`);
     },
     onSuccess: async () => {
       toast.add({ type: "success", title: "Post deleted" });
+
+      if (pathname === `/posts/${postId}`) {
+        navigate("/posts");
+      }
 
       await queryClient.invalidateQueries({
         queryKey: ["posts"],

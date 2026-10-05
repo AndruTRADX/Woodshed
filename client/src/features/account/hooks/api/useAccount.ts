@@ -48,7 +48,7 @@ export const useEditAccount = () => {
     mutationFn: async (request: EditAccountRequest) => {
       return await agent.put<UserAccountResponse>("/account", request);
     },
-    onSuccess: async (account: UserAccountResponse) => {
+    onSuccess: async (account: UserAccountResponse, request) => {
       queryClient.setQueryData(["account", account.id], account);
 
       queryClient.setQueryData(["user"], (data: UserResponse) => {
@@ -57,6 +57,8 @@ export const useEditAccount = () => {
         return {
           ...data,
           nickName: account.nickName,
+          name: request.name ?? "",
+          lastName: request.lastName ?? "",
           biography: account.biography,
         };
       });
@@ -172,7 +174,7 @@ export const useAddPhotoAccount = () => {
 
         return {
           ...data,
-          imageUrl: data.imageUrl ?? photo.url,
+          imageUrl: data.imageUrl || photo.url,
         };
       });
 
@@ -183,7 +185,7 @@ export const useAddPhotoAccount = () => {
 
           return {
             ...data,
-            imageUrl: data.imageUrl ?? photo.url,
+            imageUrl: data.imageUrl || photo.url,
           };
         },
       );
@@ -202,7 +204,7 @@ export const useDeletePhotoAccount = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (response: PhotoResponse) => {
-      return await agent.delete(`/account/${response.id}/photos`);
+      return await agent.delete(`/account/photos/${response.id}`);
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({

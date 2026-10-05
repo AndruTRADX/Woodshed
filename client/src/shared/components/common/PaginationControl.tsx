@@ -31,7 +31,7 @@ export function PaginationControl({
   const goToPage = (page: number) => {
     if (page === pageIndex) return;
     onPageChange(page);
-    document.querySelector("#woodshed-main-container")?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
   };
 
   return (

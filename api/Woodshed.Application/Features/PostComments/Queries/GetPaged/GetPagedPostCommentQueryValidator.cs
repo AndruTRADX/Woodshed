@@ -1,8 +1,9 @@
 using FluentValidation;
+using Woodshed.Application.Specifications;
 
 namespace Woodshed.Application.Features.PostComments.Queries.GetPaged;
 
-public class GetPagedPostCommentQueryValidator : AbstractValidator<GetPagedPostCommentQuery>
+public class GetPagedPostCommentQueryValidator : SpecificationParamsValidator<GetPagedPostCommentQuery>
 {
     public GetPagedPostCommentQueryValidator()
     {
