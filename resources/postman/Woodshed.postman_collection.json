@@ -1,0 +1,688 @@
+{
+  "info": {
+    "_postman_id": "553a48d6-385d-4cfa-921a-b3df02a9b368",
+    "name": "Woodshed",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24143657",
+    "_collection_link": "https://go.postman.co/collection/24143657-553a48d6-385d-4cfa-921a-b3df02a9b368?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Identity",
+      "item": [
+        {
+          "name": "Register Account",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"bob@mail.com\",\r\n  \"password\": \"Pa$$w0rd\",\r\n  \"nickName\": \"Bob67\",\r\n  \"name\": \"Bob\",\r\n  \"lastName\": \"\",\r\n  \"biography\": \"This is my bio\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/identity/register",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "identity",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login with cookies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"email\": \"andru@mail.com\",\n\t\"password\": \"Pa$$w0rd\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/login?useCookies=true",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ],
+              "query": [
+                {
+                  "key": "useCookies",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login JWT",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"email\": \"bob@mail.com\",\n\t\"password\": \"Pa$$w0rd\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign out",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/identity/sign-out",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "identity",
+                "sign-out"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/identity/my-account",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "identity",
+                "my-account"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post",
+      "item": [
+        {
+          "name": "Create Post",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"content\": \"This is my post #5 :3\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/post",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Post By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\t\"content\": \"This is my post edited :3\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/post/b68d3aba-9eff-4b88-82e5-717a55d4f66c",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "b68d3aba-9eff-4b88-82e5-717a55d4f66c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/bff83ddb-8548-4dce-861f-8ba17d0e3f0d",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "bff83ddb-8548-4dce-861f-8ba17d0e3f0d"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post Comment",
+      "item": [
+        {
+          "name": "Create Post Comment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"This is a comment 1\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78/comments",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Post Comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78/comments",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Post Comment",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"This is a comment updated\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78/comments/a7a66dfc-f131-46d1-b03a-d854424f7221",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+                "comments",
+                "a7a66dfc-f131-46d1-b03a-d854424f7221"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Post Comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/bff83ddb-8548-4dce-861f-8ba17d0e3f0d/comments/a3118724-3d31-425a-bbeb-ac4a832db772",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "bff83ddb-8548-4dce-861f-8ba17d0e3f0d",
+                "comments",
+                "a3118724-3d31-425a-bbeb-ac4a832db772"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post Like",
+      "item": [
+        {
+          "name": "Create Post Like",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78/likes",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+                "likes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Post Likes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78/likes",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+                "likes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Post Like",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/post/7ff796a1-c687-40a3-8da4-7ecb2d8a1d78/likes",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "post",
+                "7ff796a1-c687-40a3-8da4-7ecb2d8a1d78",
+                "likes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Photos",
+          "item": [
+            {
+              "name": "Add photo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "uuid": "8e38d3d5-8135-45eb-91d8-7e8b92501a09",
+                      "src": "/C:/Users/andru/Pictures/e1d7257cc91d00a61f3db98fe85eacf9.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/api/account/photos",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "photos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get User Photos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/97e929ec-6f5c-4db7-8f1c-0a0510176c1c/photos",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+                    "photos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Set Main Photo",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/photos/97e929ec-6f5c-4db7-8f1c-0a0510176c1c/main",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "photos",
+                    "97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+                    "main"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Remove Photo",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/photos/d8b08f0b-b87d-436e-8a16-8d776e3d010a",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "photos",
+                    "d8b08f0b-b87d-436e-8a16-8d776e3d010a"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Follows",
+          "item": [
+            {
+              "name": "Get Followers",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/97e929ec-6f5c-4db7-8f1c-0a0510176c1c/followers",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+                    "followers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Followees",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/97e929ec-6f5c-4db7-8f1c-0a0510176c1c/following",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+                    "following"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Follow",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/97e929ec-6f5c-4db7-8f1c-0a0510176c1c/follow",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+                    "follow"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unfollow",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/api/account/97e929ec-6f5c-4db7-8f1c-0a0510176c1c/follow",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+                    "follow"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get account by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/account/97e929ec-6f5c-4db7-8f1c-0a0510176c1c",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "97e929ec-6f5c-4db7-8f1c-0a0510176c1c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit my account",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nickName\": \"AndruTRADX\",\r\n  \"name\": \"Andru\",\r\n  \"lastName\": \"\",\r\n  \"biography\": \"I am Andru, am I not?\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/account",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "account"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
