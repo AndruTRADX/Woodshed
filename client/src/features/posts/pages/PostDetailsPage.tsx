@@ -1,6 +1,7 @@
 import PostCard from "@/features/posts/components/cards/PostCard";
 import SkeletonPage from "@/features/posts/components/SkeletonPage";
 import { useGetPostById } from "@/features/posts/hooks/api/usePosts";
+import CommentsSection from "@/features/posts/pages/components/comments/CommentSection";
 import { ErrorShow } from "@/shared/components/common/ErrorShow";
 import { Button } from "@sharedUi/button";
 import { ArrowLeft } from "lucide-react";
@@ -28,6 +29,8 @@ export default function PostDetailPage() {
       </Button>
 
       <PostCard post={post} />
+
+      <CommentsSection postId={post.id} />
     </div>
   );
 }

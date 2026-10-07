@@ -7,7 +7,8 @@ import {
 } from "@/features/posts/hooks/api/usePostLike";
 import type { PostResponse } from "@/features/posts/schemas/response/PostResponse";
 import { useGetCurrentUser } from "@/shared/hooks/api/useAccount";
-import { Link } from "react-router";
+import type React from "react";
+import { Link, useNavigate } from "react-router";
 
 interface Props {
   post: PostResponse;
@@ -22,6 +23,7 @@ export default function PostCard({ post, onOpenComments }: Props) {
   const { user } = post;
   const { user: currentUser } = useGetCurrentUser();
   const isOwner = currentUser?.id === post.userId;
+  const navigate = useNavigate();
 
   const { likePostAsync, isPendingLikePost } = useLikePost(post.id);
   const { deleteLikePostAsync, isPendingDeleteLikePost } = useDeleteLikePost(
@@ -36,8 +38,20 @@ export default function PostCard({ post, onOpenComments }: Props) {
     }
   };
 
+  const handleCardClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+
+    if (!e.currentTarget.contains(target) || target.closest("a, button"))
+      return;
+
+    navigate(`/posts/${post.id}`);
+  };
+
   return (
-    <article className="mx-2 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground shadow-[0_4px_0_var(--border)]">
+    <article
+      onClick={handleCardClick}
+      className="cursor-pointer mx-2 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground shadow-[0_4px_0_var(--border)]"
+    >
       <header className="flex items-center gap-3">
         <Link
           to={`/account/${post.userId}`}
