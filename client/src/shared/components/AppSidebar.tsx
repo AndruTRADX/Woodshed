@@ -21,6 +21,7 @@ import {
   SidebarRail,
 } from "@sharedUi/sidebar";
 import { Piano } from "lucide-react";
+import { Link } from "react-router";
 
 type Props = {
   user: UserResponse;
@@ -65,19 +66,21 @@ export function AppSidebar({ user }: Props) {
           ))}
         </SidebarMenu>
         <Separator />
-        <GlassItem className="items-center gap-3 rounded-full">
-          <UserAvatar
-            nickname={user.nickName}
-            imageUrl={user.imageUrl}
-            size="lg"
-          />
-          <div className="flex min-w-0 flex-col leading-tight">
-            <span className="truncate text-sm font-medium">{user.name}</span>
-            <span className="truncate text-xs font-medium text-primary">
-              @{user.nickName}
-            </span>
-          </div>
-        </GlassItem>
+        <Link to={`/account/${user.id}`}>
+          <GlassItem className="items-center gap-3 rounded-full">
+            <UserAvatar
+              nickname={user.nickName}
+              imageUrl={user.imageUrl}
+              size="lg"
+            />
+            <div className="flex min-w-0 flex-col leading-tight">
+              <span className="truncate text-sm font-medium">{user.name}</span>
+              <span className="truncate text-xs font-medium text-primary">
+                @{user.nickName}
+              </span>
+            </div>
+          </GlassItem>
+        </Link>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

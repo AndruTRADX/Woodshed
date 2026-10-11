@@ -258,14 +258,14 @@ export const LIQUID_GLASS_PRESETS = {
   large: {
     depth: 18,
     normalPow: 3,
-    blur: 2,
+    blur: 1.2,
     strength: 48,
     chromaticAberration: 3,
   },
   compact: {
     depth: 8,
     normalPow: 3,
-    blur: 3,
+    blur: 2,
     strength: 32,
     chromaticAberration: 2.5,
   },
