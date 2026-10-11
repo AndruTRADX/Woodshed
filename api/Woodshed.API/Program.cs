@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Woodshed.API;
+using Woodshed.API.SignalR;
 using Woodshed.Application;
 using Woodshed.Domain.Identity;
 using Woodshed.Infrastructure;
@@ -65,7 +66,14 @@ app.MapGroup("api")
             : await next(context));
 
 app.MapControllers();
-// app.MapFallbackToController("Index", "Fallback"); // Uncomment when having wwwroot/index.html
+
+/*** 
+    TODO: Find a better place to leave these MapHubs, in an independent file
+    where we can place multiple of them
+***/
+app.MapHub<PostCommentHub>("/hubs/comments"); 
+
+app.MapFallbackToController("Index", "Fallback");
 
 using (var scoped = app.Services.CreateScope())
 {

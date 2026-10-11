@@ -134,15 +134,15 @@ export const useCommentsHub = (postId: string | undefined) => {
   });
 
   const sendCommentMutation = useMutation({
-    mutationFn: (body: string) =>
-      invokeHubMethod(connectionRef, "SendComment", postId, body),
-    onMutate: (body: string) => {
+    mutationFn: (content: string) =>
+      invokeHubMethod(connectionRef, "SendComment", postId, content),
+    onMutate: (content: string) => {
       const currentUser = queryClient.getQueryData<UserResponse>(["user"]);
       if (!currentUser || !postId) return undefined;
 
       const previousCache = cache;
       const optimisticComment = buildOptimisticComment(
-        body,
+        content,
         postId,
         currentUser,
       );
@@ -152,8 +152,9 @@ export const useCommentsHub = (postId: string | undefined) => {
       }));
       return { previousCache, optimisticId: optimisticComment.id };
     },
-    onSuccess: (_data, _body, context) => {
+    onSuccess: (_data, _content, context) => {
       if (!context?.optimisticId) return;
+      console.log(_data);
       setCache((prev) => ({
         ...prev,
         comments: prev.comments.filter(
@@ -161,7 +162,8 @@ export const useCommentsHub = (postId: string | undefined) => {
         ),
       }));
     },
-    onError: (err, _body, context) => {
+    onError: (err, _content, context) => {
+      console.log(err, _content, context);
       if (context?.previousCache) setCache(() => context.previousCache);
       showConnectionError(err);
     },

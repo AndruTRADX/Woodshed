@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@sharedUi/dropdown-menu";
 import type { PostCommentResponse } from "@/features/posts/schemas/response/PostCommentResponse";
-import { GapVertical, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 
 interface Props {
   comment: PostCommentResponse;
@@ -54,7 +54,7 @@ export default function CommentItem({
                   className="ml-auto text-muted-foreground"
                   aria-label="Comment actions"
                 >
-                  <GapVertical />
+                  <MoreHorizontal />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

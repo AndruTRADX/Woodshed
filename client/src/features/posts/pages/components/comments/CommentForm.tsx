@@ -6,7 +6,7 @@ import { Button } from "@sharedUi/button";
 import { Spinner } from "@sharedUi/spinner";
 import { ButtonGroup } from "@sharedUi/button-group";
 import TextInput from "@sharedForms/TextInput";
-import { Loader, Send } from "lucide-react";
+import { RotateCcw, Send } from "lucide-react";
 import {
   CreatePostCommentRequestSchema,
   type CreatePostCommentRequest,
@@ -79,7 +79,7 @@ export default function CommentForm({ onSubmit, isPending }: Props) {
             onClick={() => form.reset()}
             variant="outline"
           >
-            <Loader />
+            <RotateCcw />
           </Button>
         </ButtonGroup>
       </form>
