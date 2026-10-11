@@ -12,14 +12,13 @@ import { Link, useNavigate } from "react-router";
 
 interface Props {
   post: PostResponse;
-  onOpenComments?: () => void;
 }
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
 });
 
-export default function PostCard({ post, onOpenComments }: Props) {
+export default function PostCard({ post }: Props) {
   const { user } = post;
   const { user: currentUser } = useGetCurrentUser();
   const isOwner = currentUser?.id === post.userId;
@@ -36,6 +35,10 @@ export default function PostCard({ post, onOpenComments }: Props) {
     } else {
       likePostAsync();
     }
+  };
+
+  const handleComments = () => {
+    navigate(`/posts/${post.id}`);
   };
 
   const handleCardClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -103,7 +106,7 @@ export default function PostCard({ post, onOpenComments }: Props) {
         isLiked={post.isLiked}
         isLikePending={isPendingLikePost || isPendingDeleteLikePost}
         onLike={handleLike}
-        onOpenComments={onOpenComments}
+        onOpenComments={handleComments}
       />
     </article>
   );

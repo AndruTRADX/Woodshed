@@ -43,8 +43,8 @@ export default function AccountHeader({ account }: Props) {
   return (
     <div className="w-full flex flex-col">
       <div
-        id="gradient-account"
-        className="bg-account-header h-28 sm:h-36"
+        id="gradient-profile"
+        className="bg-profile-header h-28 sm:h-36"
       ></div>
 
       <div className="-mt-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4">
