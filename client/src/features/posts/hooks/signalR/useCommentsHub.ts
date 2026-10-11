@@ -1,6 +1,11 @@
-import { useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useReducer, useState } from "react";
+import {
+  useMutation,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 import type { PostCommentResponse } from "@/features/posts/schemas/response/PostCommentResponse";
+import type { PostResponse } from "@/features/posts/schemas/response/PostResponse";
 import type { UserResponse } from "@/shared/schemas/response/UserResponse";
 import { toast } from "@/shared/stores/toastStore";
 import {
@@ -32,6 +37,38 @@ const mergeComments = (
   );
 };
 
+type CommentsCacheAction =
+  | { type: "comments-loaded"; page: PagedResponse<PostCommentResponse> }
+  | { type: "comment-upserted"; comment: PostCommentResponse }
+  | { type: "comment-removed"; commentId: string }
+  | { type: "cache-replaced"; cache: CommentsCache };
+
+function commentsCacheReducer(
+  state: CommentsCache,
+  action: CommentsCacheAction,
+): CommentsCache {
+  switch (action.type) {
+    case "comments-loaded":
+      return {
+        comments: mergeComments(state.comments, action.page.data),
+        pageIndex: action.page.pageIndex,
+        pageCount: action.page.pageCount,
+      };
+    case "comment-upserted":
+      return {
+        ...state,
+        comments: mergeComments(state.comments, [action.comment]),
+      };
+    case "comment-removed":
+      return {
+        ...state,
+        comments: state.comments.filter((c) => c.id !== action.commentId),
+      };
+    case "cache-replaced":
+      return action.cache;
+  }
+}
+
 const showConnectionError = (err: unknown) => {
   const message = err instanceof Error ? err.message : "Something went wrong";
   toast.add({ title: message, type: "error" });
@@ -61,17 +98,34 @@ const buildOptimisticComment = (
   },
 });
 
+const bumpCommentsCount = (
+  queryClient: QueryClient,
+  postId: string,
+  delta: 1 | -1,
+) => {
+  queryClient.setQueriesData<PagedResponse<PostResponse>>(
+    { queryKey: ["posts"] },
+    (paged) =>
+      paged && {
+        ...paged,
+        data: paged.data.map((post) =>
+          post.id === postId
+            ? { ...post, commentsCount: post.commentsCount + delta }
+            : post,
+        ),
+      },
+  );
+
+  queryClient.setQueryData<PostResponse>(
+    ["post", postId],
+    (post) => post && { ...post, commentsCount: post.commentsCount + delta },
+  );
+};
+
 export const useCommentsHub = (postId: string | undefined) => {
   const queryClient = useQueryClient();
-  const [cache, setCacheState] = useState<CommentsCache>(emptyCache);
+  const [cache, dispatch] = useReducer(commentsCacheReducer, emptyCache);
   const [isLoadingComments, setIsLoadingComments] = useState(true);
-
-  const cacheRef = useRef(cache);
-  const setCache = (updater: (prev: CommentsCache) => CommentsCache) => {
-    const next = updater(cacheRef.current);
-    cacheRef.current = next;
-    setCacheState(next);
-  };
 
   const connectionRef = useHubConnection(
     "/hubs/comments",
@@ -79,37 +133,28 @@ export const useCommentsHub = (postId: string | undefined) => {
     {
       enabled: !!postId,
       handlers: {
-        ReceiveComment: (comment: PostCommentResponse) =>
-          setCache((prev) => ({
-            ...prev,
-            comments: mergeComments(prev.comments, [comment]),
-          })),
-        CommentDeleted: (commentId: string) =>
-          setCache((prev) => ({
-            ...prev,
-            comments: prev.comments.filter(
-              (comment) => comment.id !== commentId,
-            ),
-          })),
+        ReceiveComment: (comment: PostCommentResponse) => {
+          dispatch({ type: "comment-upserted", comment });
+          if (postId) bumpCommentsCount(queryClient, postId, 1);
+        },
+        CommentDeleted: (commentId: string) => {
+          dispatch({ type: "comment-removed", commentId });
+          if (postId) bumpCommentsCount(queryClient, postId, -1);
+        },
       },
       onConnected: async (connection) => {
         try {
           const page = await connection.invoke<
             PagedResponse<PostCommentResponse>
           >("LoadComments", postId, 1, PAGE_SIZE);
-          setCache((prev) => ({
-            comments: mergeComments(prev.comments, page.data),
-            pageIndex: page.pageIndex,
-            pageCount: page.pageCount,
-          }));
+          dispatch({ type: "comments-loaded", page });
         } finally {
           setIsLoadingComments(false);
         }
       },
       onError: showConnectionError,
       onDisconnected: () => {
-        cacheRef.current = emptyCache;
-        setCacheState(emptyCache);
+        dispatch({ type: "cache-replaced", cache: emptyCache });
         setIsLoadingComments(true);
       },
     },
@@ -124,12 +169,7 @@ export const useCommentsHub = (postId: string | undefined) => {
         cache.pageIndex + 1,
         PAGE_SIZE,
       ),
-    onSuccess: (page) =>
-      setCache((prev) => ({
-        comments: mergeComments(prev.comments, page.data),
-        pageIndex: page.pageIndex,
-        pageCount: page.pageCount,
-      })),
+    onSuccess: (page) => dispatch({ type: "comments-loaded", page }),
     onError: showConnectionError,
   });
 
@@ -146,25 +186,16 @@ export const useCommentsHub = (postId: string | undefined) => {
         postId,
         currentUser,
       );
-      setCache((prev) => ({
-        ...prev,
-        comments: mergeComments(prev.comments, [optimisticComment]),
-      }));
+      dispatch({ type: "comment-upserted", comment: optimisticComment });
       return { previousCache, optimisticId: optimisticComment.id };
     },
     onSuccess: (_data, _content, context) => {
       if (!context?.optimisticId) return;
-      console.log(_data);
-      setCache((prev) => ({
-        ...prev,
-        comments: prev.comments.filter(
-          (comment) => comment.id !== context.optimisticId,
-        ),
-      }));
+      dispatch({ type: "comment-removed", commentId: context.optimisticId });
     },
     onError: (err, _content, context) => {
-      console.log(err, _content, context);
-      if (context?.previousCache) setCache(() => context.previousCache);
+      if (context?.previousCache)
+        dispatch({ type: "cache-replaced", cache: context.previousCache });
       showConnectionError(err);
     },
   });
@@ -174,14 +205,12 @@ export const useCommentsHub = (postId: string | undefined) => {
       invokeHubMethod(connectionRef, "DeleteComment", postId, commentId),
     onMutate: (commentId: string) => {
       const previousCache = cache;
-      setCache((prev) => ({
-        ...prev,
-        comments: prev.comments.filter((comment) => comment.id !== commentId),
-      }));
+      dispatch({ type: "comment-removed", commentId });
       return { previousCache };
     },
     onError: (err, _commentId, context) => {
-      if (context?.previousCache) setCache(() => context.previousCache);
+      if (context?.previousCache)
+        dispatch({ type: "cache-replaced", cache: context.previousCache });
       showConnectionError(err);
     },
   });
