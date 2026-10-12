@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Woodshed.Application.Contracts.Caching;
 using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Contracts.Photos;
@@ -37,6 +38,10 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserAccountService, UserAccountService>();
         services.AddScoped<IUserAccessor, UserAccessor>();
+
+        // Caching
+        services.AddMemoryCache();
+        services.AddSingleton<ICacheService, CacheService>();
 
         return services;
     }

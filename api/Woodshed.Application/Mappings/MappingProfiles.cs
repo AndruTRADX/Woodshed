@@ -3,6 +3,7 @@ using Woodshed.Application.Models.Request.PostComments;
 using Woodshed.Application.Models.Request.Posts;
 using Woodshed.Application.Models.Response.Follow;
 using Woodshed.Application.Models.Response.Identity;
+using Woodshed.Application.Models.Response.Instruments;
 using Woodshed.Application.Models.Response.Photos;
 using Woodshed.Application.Models.Response.PostComments;
 using Woodshed.Application.Models.Response.PostLikes;
@@ -42,5 +43,7 @@ public class MappingProfiles : Profile
         CreateMap<PostLike, PostLikeResponse>();
 
         CreateMap<Photo, PhotoResponse>();
+
+        CreateMap<Instrument, InstrumentResponse>();
     }
 }
