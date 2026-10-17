@@ -1,5 +1,3 @@
-using System;
-
 namespace Woodshed.Application.Models.Videos;
 
 public class VideoUploadResults

@@ -29,7 +29,8 @@ public class GetInstrumentsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, 
                 return responses;
             },
             group: CacheKeys.InstrumentsGroup,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken
+        );
 
         return new ApiResponse<IReadOnlyList<InstrumentResponse>>(instruments!);
     }

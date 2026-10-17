@@ -46,31 +46,36 @@ public class AppDbContextSeed
                 {
                     Code = Domain.Enums.ProficiencyLevel.Novice,
                     Name = "Novice",
-                    Description = "You're just starting out, learning how the instrument works and getting comfortable with the basics."
+                    Description = "You're just starting out, learning how the instrument works and getting comfortable with the basics.",
+                    Order = 1,
                 },
                 new()
                 {
                     Code = Domain.Enums.ProficiencyLevel.Beginner,
                     Name = "Beginner",
-                    Description = "You know the fundamentals and can play simple melodies or chords, though you're still building consistency."
+                    Description = "You know the fundamentals and can play simple melodies or chords, though you're still building consistency.",
+                    Order = 2,
                 },
                 new()
                 {
                     Code = Domain.Enums.ProficiencyLevel.Intermediate,
                     Name = "Intermediate",
-                    Description = "You can play full songs comfortably, combine techniques, and you're starting to develop your own style."
+                    Description = "You can play full songs comfortably, combine techniques, and you're starting to develop your own style.",
+                    Order = 3,
                 },
                 new()
                 {
                     Code = Domain.Enums.ProficiencyLevel.Advanced,
                     Name = "Advanced",
-                    Description = "You have strong technical control, can tackle complex pieces, and adapt easily across different styles or genres."
+                    Description = "You have strong technical control, can tackle complex pieces, and adapt easily across different styles or genres.",
+                    Order = 4,
                 },
                 new()
                 {
                     Code = Domain.Enums.ProficiencyLevel.Expert,
                     Name = "Expert",
-                    Description = "You can compose your own music. Being an expert isn't about flashy playing, it's about truly understanding the instrument and creating something of your own :3"
+                    Description = "You can compose your own music. Being an expert isn't about flashy playing, it's about truly understanding the instrument and creating something of your own :3",
+                    Order = 5,
                 },
             ];
 

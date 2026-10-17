@@ -11,6 +11,9 @@ public static class CacheKeys
     public const string InstrumentsGroup = "instruments";
     public static string Instrument(string id) => $"instruments:{id}";
 
+    public const string InstrumentProficiency = "InstrumentProficiency";
+    public const string InstrumentProficiencyGroup = "InstrumentProficiency";
+
     public static string InstrumentUser(string userId) => $"instrumentsUser:{userId}";
     public const string InstrumentsUserGroup = "instrumentsUser";
     public static string InstrumentUser(string userId, string instrumentId) => $"instrumentsUser:{userId}:{instrumentId}";

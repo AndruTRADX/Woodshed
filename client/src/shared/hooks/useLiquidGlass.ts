@@ -111,23 +111,11 @@ export function useLiquidGlass<T extends HTMLElement>({
   const style = useMemo<CSSProperties>(() => {
     if (!enabled || !size || size.width === 0 || size.height === 0) return {};
 
-    const { blur, strength, chromaticAberration, depth, normalPow } =
+    const { blur, strength, chromaticAberration, depth, brightness, saturate } =
       LIQUID_GLASS_PRESETS[preset];
 
-    // Tone comes from theme tokens so dark and light glass can differ.
-    const tone =
-      "brightness(var(--glass-brightness)) saturate(var(--glass-saturate))";
-
-    // The rim is an *inset* shadow on purpose. An outer box-shadow (Tailwind
-    // shadow-*/ring-*) or filter: drop-shadow() on this same element shifts
-    // Chromium's backdrop-filter coordinate space, which misaligns the displacement
-    // map. Put drop shadows on a wrapper element instead (see Toaster).
-    const rim: CSSProperties = border ? { boxShadow: "var(--glass-rim)" } : {};
-
     if (!detectLiquidGlassSupport()) {
-      // Firefox/Safari: no SVG backdrop filters, but keep frost, tone and rim so
-      // the surface still reads as glass.
-      return { backdropFilter: `blur(${blur * 2}px) ${tone}`, ...rim };
+      return { backdropFilter: `blur(${blur * 2}px)` };
     }
 
     const filterUrl = buildDisplacementFilter({
@@ -135,16 +123,16 @@ export function useLiquidGlass<T extends HTMLElement>({
       height: size.height,
       radius: size.radius,
       depth: resolveDepth(depth, size.width, size.height),
-      normalPow,
       strength,
       chromaticAberration,
     });
 
-    // Frost first, then refract the frosted backdrop (the order KWin's shader
-    // uses), with no blur afterwards - a trailing blur smears the lensed edge.
     return {
-      backdropFilter: `blur(${blur}px) url('${filterUrl}') ${tone}`,
-      ...rim,
+      backdropFilter: `blur(${blur / 2}px) url('${filterUrl}') blur(${blur}px) brightness(${brightness}) saturate(${saturate})`,
+      ...(border && {
+        boxShadow:
+          "inset 1px 1px 1px 0 var(--glass-highlight), inset -1px -1px 1px 0 var(--glass-highlight)",
+      }),
     };
   }, [enabled, size, preset, border]);
 

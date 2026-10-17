@@ -19,4 +19,7 @@ public class InstrumentProficiency : BaseDomainModel
     [Column("description")]
     [MaxLength(254)]
     public required string Description { get; set; }
+
+    [Column("order")]
+    public required int Order { get; set; }
 }
