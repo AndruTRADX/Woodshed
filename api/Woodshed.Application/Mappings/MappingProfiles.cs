@@ -1,6 +1,7 @@
 using AutoMapper;
 using Woodshed.Application.Models.Request.PostComments;
 using Woodshed.Application.Models.Request.Posts;
+using Woodshed.Application.Models.Request.UserInstruments;
 using Woodshed.Application.Models.Response.Follow;
 using Woodshed.Application.Models.Response.Identity;
 using Woodshed.Application.Models.Response.InstrumentProficiencies;
@@ -49,6 +50,7 @@ public class MappingProfiles : Profile
         CreateMap<Instrument, InstrumentResponse>();
 
         CreateMap<UserInstrument, UserInstrumentResponse>();
+        CreateMap<CreateUserInstrumentRequest, UserInstrument>();
 
         CreateMap<InstrumentProficiency, InstrumentProficiencyResponse>();
     }

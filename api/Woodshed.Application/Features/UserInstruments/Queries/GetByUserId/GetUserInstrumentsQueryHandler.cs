@@ -13,7 +13,7 @@ public class GetUserInstrumentsQueryHandler(IUnitOfWork unitOfWork, IMapper mapp
     public async Task<ApiResponse<IReadOnlyList<UserInstrumentResponse>>> Handle(GetUserInstrumentsQuery request, CancellationToken cancellationToken)
     {
         var instruments = await cacheService.GetOrCreateAsync(
-            CacheKeys.InstrumentUser(request.UserId),
+            CacheKeys.UserInstrument(request.UserId),
             async _ =>
             {
                 var entities = await unitOfWork.Repository<UserInstrument>().GetAsync(predicate: x => x.UserId == request.UserId);
@@ -22,12 +22,12 @@ public class GetUserInstrumentsQueryHandler(IUnitOfWork unitOfWork, IMapper mapp
 
                 foreach (var instrument in responses)
                 {
-                    cacheService.Set(CacheKeys.InstrumentUser(instrument.UserId, instrument.InstrumentId), instrument, group: CacheKeys.InstrumentsUserGroup);
+                    cacheService.Set(CacheKeys.UserInstrument(instrument.UserId, instrument.InstrumentId), instrument, group: CacheKeys.UserInstrumentGroup);
                 }
 
                 return responses;
             },
-            group: CacheKeys.InstrumentsUserGroup,
+            group: CacheKeys.UserInstrumentGroup,
             cancellationToken: cancellationToken
         );
 
