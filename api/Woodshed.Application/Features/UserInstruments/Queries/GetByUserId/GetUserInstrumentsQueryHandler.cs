@@ -16,7 +16,10 @@ public class GetUserInstrumentsQueryHandler(IUnitOfWork unitOfWork, IMapper mapp
             CacheKeys.UserInstrument(request.UserId),
             async _ =>
             {
-                var entities = await unitOfWork.Repository<UserInstrument>().GetAsync(predicate: x => x.UserId == request.UserId);
+                var entities = await unitOfWork.Repository<UserInstrument>().GetAsync(
+                    predicate: x => x.UserId == request.UserId,
+                    includes: [x => x.Instrument, x => x.Proficiency]
+                );
 
                 var responses = mapper.Map<List<UserInstrumentResponse>>(entities);
 
