@@ -51,6 +51,7 @@ public class MappingProfiles : Profile
 
         CreateMap<UserInstrument, UserInstrumentResponse>();
         CreateMap<CreateUserInstrumentRequest, UserInstrument>();
+        CreateMap<UpdateUserInstrumentRequest, UserInstrument>();
 
         CreateMap<InstrumentProficiency, InstrumentProficiencyResponse>();
     }

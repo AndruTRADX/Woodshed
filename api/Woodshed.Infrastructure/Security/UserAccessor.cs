@@ -35,7 +35,11 @@ public class UserAccessor(UserManager<ApplicationUser> userManager, IHttpContext
 
     public string GetUserId()
     {
-        return httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? throw new UnauthorizedException();
+        var userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userId))
+            throw new UnauthorizedException();
+
+        return userId;
     }
 }

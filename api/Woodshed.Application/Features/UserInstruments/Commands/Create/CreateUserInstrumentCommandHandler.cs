@@ -5,7 +5,6 @@ using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Exceptions;
 using Woodshed.Application.Models.Response.Common;
-using Woodshed.Application.Models.Response.UserInstruments;
 using Woodshed.Domain;
 
 namespace Woodshed.Application.Features.UserInstruments.Commands.Create;
