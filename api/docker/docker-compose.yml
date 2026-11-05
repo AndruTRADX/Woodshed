@@ -5,10 +5,10 @@ services:
     restart: unless-stopped
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Password@1"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:?Define MSSQL_SA_PASSWORD in docker/.env}"
       MSSQL_PID: "Developer"
     ports:
-      - "1433:1433"
+      - "127.0.0.1:1433:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
     healthcheck:

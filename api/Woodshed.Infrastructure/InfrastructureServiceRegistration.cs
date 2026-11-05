@@ -5,6 +5,7 @@ using Woodshed.Application.Contracts.Caching;
 using Woodshed.Application.Contracts.Identity;
 using Woodshed.Application.Contracts.Persistence;
 using Woodshed.Application.Contracts.Photos;
+using Woodshed.Application.Contracts.Videos;
 using Woodshed.Infrastructure.Models;
 using Woodshed.Infrastructure.Persistence;
 using Woodshed.Infrastructure.Repositories;
@@ -33,6 +34,9 @@ public static class InfrastructureServiceRegistration
         // Photos
         services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
         services.AddScoped<IPhotoService, PhotoService>();
+
+        // Videos
+        services.AddScoped<IVideoService, VideoService>();
 
         // Identity
         services.AddScoped<IAuthService, AuthService>();

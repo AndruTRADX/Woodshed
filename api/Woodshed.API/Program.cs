@@ -93,6 +93,7 @@ using (var scoped = app.Services.CreateScope())
     {
         var logger = loggerFactory.CreateLogger<Program>();
         logger.LogError(ex, "Migration error");
+        throw;
     }
 }
 

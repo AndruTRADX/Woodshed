@@ -8,7 +8,7 @@ public class PostSpecification : BaseSpecification<Post>
     public PostSpecification(PostSpecificationParams specParams, string? userId) : base(
         x =>
             (string.IsNullOrWhiteSpace(specParams.UserId) || x.UserId.Equals(specParams.UserId))
-            && (!specParams.IsMyPost || (!string.IsNullOrWhiteSpace(userId) && x.UserId.Equals(specParams.UserId)))
+            && (!specParams.IsMyPost || (!string.IsNullOrWhiteSpace(userId) && x.UserId.Equals(userId)))
     )
     {
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
@@ -28,7 +28,9 @@ public class PostSpecification : BaseSpecification<Post>
                     break;
             }
         }
-
-        AddOrderByDescending(p => p.CreatedAt);
+        else
+        {
+            AddOrderByDescending(p => p.CreatedAt);
+        }
     }
 }

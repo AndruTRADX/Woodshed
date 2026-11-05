@@ -17,7 +17,7 @@ export function NoContent({ title, description }: Props) {
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <X stroke="2" />
+          <X className="text-primary" />
         </EmptyMedia>
         <EmptyTitle>{title ?? "Content not found"}</EmptyTitle>
         <EmptyDescription>

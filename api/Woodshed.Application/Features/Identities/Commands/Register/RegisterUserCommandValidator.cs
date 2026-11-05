@@ -18,7 +18,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
         RuleFor(x => x.Account.Password)
             .NotNull().NotEmpty()
             .MinimumLength(6)
-            .WithMessage("Password is required and must have at least 3 characters")
+            .WithMessage("Password is required and must have at least 6 characters")
             .MaximumLength(512)
             .WithMessage("Password must not exceed 512 characters");
 
@@ -42,9 +42,5 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
         RuleFor(x => x.Account.Biography)
             .MaximumLength(512)
             .WithMessage("Biography must not exceed 512 characters");
-
-        RuleFor(x => x.Account.ImageUrl)
-            .MaximumLength(512)
-            .WithMessage("ImageUrl must not exceed 512 characters");
     }
 }

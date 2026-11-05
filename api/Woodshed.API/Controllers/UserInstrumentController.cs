@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Woodshed.Application.Features.UserInstruments.Commands.Create;
 using Woodshed.Application.Features.UserInstruments.Commands.Delete;
@@ -10,6 +11,7 @@ using Woodshed.Application.Models.Response.UserInstruments;
 
 namespace Woodshed.API.Controllers;
 
+[Authorize]
 public class UserInstrumentController : BaseApiController
 {
     [HttpGet("{userId}")]

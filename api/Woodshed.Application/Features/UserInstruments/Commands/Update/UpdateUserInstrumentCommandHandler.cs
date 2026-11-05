@@ -25,7 +25,7 @@ public class UpdateUserInstrumentCommandHandler(IUnitOfWork unitOfWork, IUserAcc
         var rows = await unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (rows <= 0)
-            throw new ApplicationException("The instrument of the user could not be deleted");
+            throw new ApplicationException("The instrument of the user could not be updated");
 
         cache.Remove(CacheKeys.UserInstrument(userId));
 

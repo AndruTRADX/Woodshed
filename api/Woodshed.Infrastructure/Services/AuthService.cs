@@ -29,7 +29,6 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
             Name = request.Name,
             LastName = request.LastName,
             Biography = request.Biography,
-            ImageUrl = request.ImageUrl,
         };
 
         var createResult = await userManager.CreateAsync(user, request.Password);

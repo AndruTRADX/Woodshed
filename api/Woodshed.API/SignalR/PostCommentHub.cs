@@ -1,5 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Woodshed.Application.Features.PostComments.Commands.Create;
 using Woodshed.Application.Features.PostComments.Commands.Delete;
@@ -16,6 +17,7 @@ public interface ICommentClient
     Task CommentDeleted(string commentId);
 }
 
+[Authorize]
 public class PostCommentHub(IMediator mediator, IHttpContextAccessor httpContextAccessor) : Hub<ICommentClient>
 {
     public override async Task OnConnectedAsync()

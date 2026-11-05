@@ -607,3 +607,8 @@ $RECYCLE.BIN/
 
 *appsettings.*.json
 *appsettings.json
+
+!appsettings.example.json
+
+.env
+!.env.example
