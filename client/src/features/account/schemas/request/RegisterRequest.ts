@@ -7,7 +7,7 @@ export const RegisterRequestSchema = z.object({
   nickName: requiredString("NickName", 3, 64),
   name: optionalString("Name", 155),
   lastName: optionalString("LastName", 155),
-  biography: optionalString("Biography", 512),
+  biography: optionalString("Biography", 1024),
 });
 
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;

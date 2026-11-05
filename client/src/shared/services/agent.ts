@@ -34,7 +34,9 @@ const STATUS_LABELS: Record<number, string> = {
   401: "Unauthorized",
   403: "Forbidden",
   404: "Not Found",
+  409: "Conflict",
   422: "Unprocessable Content",
+  429: "Too Many Requests",
   500: "Server Error",
 };
 
@@ -98,6 +100,9 @@ agent.interceptors.response.use(
         return Promise.reject(error);
 
       case 401:
+      case 403:
+      case 409:
+      case 429:
         toast.add({
           type: "error",
           title: title,
