@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Woodshed.Domain.Common;
+using Woodshed.Domain.Enums;
 using Woodshed.Domain.Identity;
 
 namespace Woodshed.Domain;
@@ -19,9 +20,8 @@ public class UserInstrument : BaseDomainModel
     [Column("started_playing_at")]
     public required DateOnly StartedPlayingAt { get; set; }
 
-    [Column("proficiency_id")]
-    [MaxLength(36)]
-    public string ProficiencyId { get; set; } = string.Empty;
+    [Column("proficiency_id", TypeName = "varchar(20)")]
+    public ProficiencyLevel ProficiencyId { get; set; }
 
     public ApplicationUser User { get; set; } = null!;
     public Instrument Instrument { get; set; } = null!;

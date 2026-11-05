@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -14,10 +15,10 @@ public class UnhandledExceptionBehavior<TRequest, TResponse>(ILogger<TRequest> l
         {
             return await next(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not ValidationException and not ApplicationException and not OperationCanceledException)
         {
             var requestName = typeof(TRequest).Name;
-            _logger.LogError(ex, "Application Request: there was an exceptions for the request {Name} {@Request}", requestName, request);
+            _logger.LogError(ex, "Application Request: unhandled exception for request {Name}", requestName);
 
             throw;
         }

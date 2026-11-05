@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Woodshed.Domain;
 using Woodshed.Domain.Identity;
@@ -88,6 +87,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithMany(ui => ui.UserInstruments)
                 .HasForeignKey(i => i.InstrumentId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            x.HasOne(p => p.Proficiency)
+                .WithMany()
+                .HasForeignKey(p => p.ProficiencyId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Entity<UserFollower>(x =>
@@ -135,13 +139,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 }
             }
         }
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.ConfigureWarnings(warnings =>
-            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
-
-        base.OnConfiguring(optionsBuilder);
     }
 }

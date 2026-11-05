@@ -61,7 +61,11 @@ public class PostCommentHub(IMediator mediator, IHttpContextAccessor httpContext
             var response = await mediator.Send(request);
             return response.Data!;
         }
-        catch (Exception ex) when (ex is ValidationException or ApplicationException)
+        catch (ValidationException ex)
+        {
+            throw new HubException(string.Join(" ", ex.Errors.Select(e => e.ErrorMessage).Distinct()));
+        }
+        catch (ApplicationException ex)
         {
             throw new HubException(ex.Message);
         }

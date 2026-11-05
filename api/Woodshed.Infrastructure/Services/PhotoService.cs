@@ -3,7 +3,8 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
 using Woodshed.Application.Contracts.Photos;
 using Woodshed.Application.Models.Photos;
 using Woodshed.Infrastructure.Models;
@@ -12,6 +13,8 @@ namespace Woodshed.Infrastructure.Services;
 
 public class PhotoService : IPhotoService
 {
+    private const int MaxStoredDimensionPx = 2048;
+
     private readonly Cloudinary _cloudinary;
     private readonly CloudinarySettings _cloudinarySettings;
 
@@ -52,15 +55,31 @@ public class PhotoService : IPhotoService
 
         using var image = await Image.LoadAsync(originalStream);
 
+        image.Mutate(x => x.AutoOrient());
+
+        if (image.Width > MaxStoredDimensionPx || image.Height > MaxStoredDimensionPx)
+        {
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Mode = ResizeMode.Max,
+                Size = new SixLabors.ImageSharp.Size(MaxStoredDimensionPx, MaxStoredDimensionPx),
+            }));
+        }
+
         using var reEncodedStream = new MemoryStream();
-        await image.SaveAsync(reEncodedStream, new PngEncoder { SkipMetadata = true });
+        await image.SaveAsync(reEncodedStream, new WebpEncoder
+        {
+            FileFormat = WebpFileFormatType.Lossy,
+            Quality = 85,
+            SkipMetadata = true,
+        });
         reEncodedStream.Position = 0;
 
         var uploadParams = new ImageUploadParams
         {
-            File = new FileDescription($"{Guid.NewGuid()}.png", reEncodedStream),
+            File = new FileDescription($"{Guid.NewGuid()}.webp", reEncodedStream),
             Folder = "Woodshed",
-            Format = "png"
+            Format = "webp"
         };
 
         var uploadResults = await _cloudinary.UploadAsync(uploadParams);

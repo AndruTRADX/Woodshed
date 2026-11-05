@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Woodshed.API.Security;
 using Woodshed.Application.Features.Account.Actions.AddPhoto;
 using Woodshed.Application.Features.Account.Actions.EditAccount;
 using Woodshed.Application.Features.Account.Actions.FollowAccount;
@@ -36,6 +38,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpPost("photos")]
+    [EnableRateLimiting(RateLimitPolicies.Uploads)]
     public async Task<ActionResult<ApiResponse<PhotoResponse>>> AddPhoto([FromForm] AddPhotoRequest request)
     {
         return await Mediator.Send(new AddPhotoAccountAction { Request = request });

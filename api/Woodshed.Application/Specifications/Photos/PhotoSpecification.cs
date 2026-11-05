@@ -6,9 +6,10 @@ public class PhotoSpecification : BaseSpecification<Photo>
 {
     public PhotoSpecification(PhotoSpecificationParams specParams) : base(
         x =>
-            string.IsNullOrWhiteSpace(specParams.UserId) || x.UserId.Contains(specParams.UserId)
+            string.IsNullOrWhiteSpace(specParams.UserId) || x.UserId == specParams.UserId
     )
     {
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
+        AddOrderBy(x => x.Id);
     }
 }

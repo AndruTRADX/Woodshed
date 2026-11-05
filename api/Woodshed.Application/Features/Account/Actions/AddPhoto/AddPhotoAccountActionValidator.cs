@@ -8,8 +8,8 @@ public class AddPhotoAccountActionValidator : AbstractValidator<AddPhotoAccountA
 {
     private static readonly string[] AllowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
     private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/webp"];
-    private const long MaxFileSizeBytes = 20 * 1024 * 1024;
-    private const int MaxDimensionPx = 8000;
+    private const long MaxFileSizeBytes = 10 * 1024 * 1024;
+    private const int MaxDimensionPx = 4096;
 
     public AddPhotoAccountActionValidator()
     {

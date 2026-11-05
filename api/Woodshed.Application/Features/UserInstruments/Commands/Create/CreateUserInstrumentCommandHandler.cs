@@ -19,7 +19,7 @@ public class CreateUserInstrumentCommandHandler(IUnitOfWork unitOfWork, IMapper 
             ?? throw new NotFoundException(nameof(Instrument), request.Request.InstrumentId);
         
         _ = await unitOfWork.Repository<InstrumentProficiency>().GetFirstAsync(x => x.Code == request.Request.ProficiencyId)
-            ?? throw new NotFoundException(nameof(InstrumentProficiency), request.Request.InstrumentId);
+            ?? throw new NotFoundException(nameof(InstrumentProficiency), request.Request.ProficiencyId);
 
         var data = mapper.Map<UserInstrument>(request.Request);
         data.UserId = userId;

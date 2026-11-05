@@ -4,6 +4,6 @@ namespace Woodshed.Application.Specifications.Photos;
 
 public class PhotoCountSpecification(PhotoSpecificationParams specParams) : BaseSpecification<Photo>(
     x =>
-        string.IsNullOrWhiteSpace(specParams.UserId) || x.UserId.Contains(specParams.UserId)
+        string.IsNullOrWhiteSpace(specParams.UserId) || x.UserId == specParams.UserId
     )
 { }

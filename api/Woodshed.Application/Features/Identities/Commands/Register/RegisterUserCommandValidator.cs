@@ -40,7 +40,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .WithMessage("LastName must not exceed 155 characters");
 
         RuleFor(x => x.Account.Biography)
-            .MaximumLength(512)
-            .WithMessage("Biography must not exceed 512 characters");
+            .MaximumLength(1024)
+            .WithMessage("Biography must not exceed 1024 characters");
     }
 }

@@ -18,14 +18,7 @@ public class GetInstrumentProficienciesQueryHandler(IUnitOfWork unitOfWork, IMap
             {
                 var entities = await unitOfWork.Repository<InstrumentProficiency>().GetAsync(orderBy: x => x.OrderBy(x => x.Order));
 
-                var responses = mapper.Map<List<InstrumentProficiencyResponse>>(entities);
-
-                foreach (var proficiency in responses)
-                {
-                    cacheService.Set(CacheKeys.InstrumentProficiency, proficiency, group: CacheKeys.InstrumentProficiencyGroup);
-                }
-
-                return responses;
+                return mapper.Map<List<InstrumentProficiencyResponse>>(entities);
             },
             group: CacheKeys.InstrumentProficiencyGroup,
             cancellationToken: cancellationToken

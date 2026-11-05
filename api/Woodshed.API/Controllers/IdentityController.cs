@@ -1,5 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Woodshed.API.Security;
 using Woodshed.Application.Features.Identities.Commands.Register;
 using Woodshed.Application.Features.Identities.Commands.SignOut;
 using Woodshed.Application.Features.Identities.Queries.GetAccount;
@@ -18,6 +20,7 @@ public class IdentityController : BaseApiController
     }
 
     [HttpPost("register")]
+    [EnableRateLimiting(RateLimitPolicies.Auth)]
     public async Task<ActionResult<ApiResponse<Guid>>> RegisterUser(RegisterUserRequest account)
     {
         return await Mediator.Send(new RegisterUserCommand { Account = account });
